@@ -1,6 +1,6 @@
 ﻿namespace IngSoft.BE
 {
-    public class Class1
+    public class Usuario : Auditable
     {
     }
 }

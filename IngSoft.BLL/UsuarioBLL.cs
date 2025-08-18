@@ -1,6 +1,6 @@
 ﻿namespace IngSoft.BLL
 {
-    public class Class1
+    public class UsuarioBLL
     {
     }
 }
