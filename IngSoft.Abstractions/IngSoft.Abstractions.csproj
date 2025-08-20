@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4EEB024F-7ED8-4C89-AE99-7F474580995A}</ProjectGuid>
+    <ProjectGuid>{F5884FD3-5665-45AE-8228-33C20C81ECE5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IngSoft.BLL</RootNamespace>
-    <AssemblyName>IngSoft.BLL</AssemblyName>
+    <RootNamespace>IngSoft.Abstractions</RootNamespace>
+    <AssemblyName>IngSoft.Abstractions</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,14 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UsuarioBLL.cs" />
+    <Compile Include="IUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IngSoft.DAL\IngSoft.DAL.csproj">
-      <Project>{7fbba8c4-6737-4cfd-9b5c-9b51945e36f7}</Project>
-      <Name>IngSoft.DAL</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

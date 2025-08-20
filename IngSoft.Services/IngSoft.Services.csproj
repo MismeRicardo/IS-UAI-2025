@@ -41,12 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Encriptadores\EncriptadorMD5.cs" />
     <Compile Include="Persistencia\IConnection.cs" />
     <Compile Include="Persistencia\SqlServerConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\IngSoft.Abstractions\IngSoft.Abstractions.csproj">
+      <Project>{f5884fd3-5665-45ae-8228-33c20c81ece5}</Project>
+      <Name>IngSoft.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

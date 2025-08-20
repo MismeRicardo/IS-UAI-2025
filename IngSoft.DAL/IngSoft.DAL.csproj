@@ -44,11 +44,5 @@
     <Compile Include="UsuarioDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IngSoft.BE\IngSoft.BE.csproj">
-      <Project>{e5c795bd-797f-4a52-ab3a-353a75420746}</Project>
-      <Name>IngSoft.BE</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

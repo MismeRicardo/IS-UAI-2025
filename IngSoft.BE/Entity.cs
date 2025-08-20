@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IngSoft.Services
+namespace IngSoft.BE
 {
-    public class Class1
+    internal class Entity
     {
     }
 }
