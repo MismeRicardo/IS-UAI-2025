@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7FBBA8C4-6737-4CFD-9B5C-9B51945E36F7}</ProjectGuid>
+    <ProjectGuid>{CDAAC3D8-6977-4712-B892-EF025B7C264D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IngSoft.DAL</RootNamespace>
-    <AssemblyName>IngSoft.DAL</AssemblyName>
+    <RootNamespace>IngSoft.Domain</RootNamespace>
+    <AssemblyName>IngSoft.Domain</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,13 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UsuarioDAL.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IngSoft.BE\IngSoft.BE.csproj">
-      <Project>{e5c795bd-797f-4a52-ab3a-353a75420746}</Project>
-      <Name>IngSoft.BE</Name>
+    <ProjectReference Include="..\IngSoft.Abstractions\IngSoft.Abstractions.csproj">
+      <Project>{f5884fd3-5665-45ae-8228-33c20c81ece5}</Project>
+      <Name>IngSoft.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("IngSoft.BLL")]
+[assembly: AssemblyTitle("IngSoft.Abstractions")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("IngSoft.BLL")]
+[assembly: AssemblyProduct("IngSoft.Abstractions")]
 [assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4eeb024f-7ed8-4c89-ae99-7f474580995a")]
+[assembly: Guid("f5884fd3-5665-45ae-8228-33c20c81ece5")]
 
 // Version information for an assembly consists of the following four values:
 //
