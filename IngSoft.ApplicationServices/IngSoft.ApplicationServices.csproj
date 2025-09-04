@@ -41,7 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UsuarioServices.cs" />
+    <Compile Include="Factory\ServicesFactory.cs" />
+    <Compile Include="IBitacoraServices.cs" />
+    <Compile Include="Implementation\BitacoraServices.cs" />
+    <Compile Include="Implementation\UsuarioServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
