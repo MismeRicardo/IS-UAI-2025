@@ -15,9 +15,16 @@ namespace IngSoft.UI
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnBitacora_Click(object sender, EventArgs e)
         {
-            label1.Text = "Hello World!";
+            var frmBitacora = new FrmBitacora();
+            frmBitacora.ShowDialog();
+        }
+
+        private void btnUsuario_Click(object sender, EventArgs e)
+        {
+            var frmUsuario = new FrmUsuario();
+            frmUsuario.ShowDialog();
         }
     }
 }
