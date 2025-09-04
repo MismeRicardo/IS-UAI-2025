@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SqlServerConnection.cs" />
+    <Compile Include="Factory\ConnectionFactory.cs" />
+    <Compile Include="Implementation\SqlServerConnection.cs" />
     <Compile Include="IConnection.cs" />
+    <Compile Include="Models\BitacoraQuerySql.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
