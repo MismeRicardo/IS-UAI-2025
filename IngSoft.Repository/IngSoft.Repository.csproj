@@ -42,9 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IControlIdiomaRepository.cs" />
+    <Compile Include="IIdiomaRepository.cs" />
     <Compile Include="Implementation\BitacoraRepository.cs" />
     <Compile Include="Factory\FactoryRepository.cs" />
     <Compile Include="IBitacoraRepository.cs" />
+    <Compile Include="Implementation\ControlIdiomaRepository.cs" />
+    <Compile Include="Implementation\IdiomaRepository.cs" />
     <Compile Include="Implementation\UsuarioRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

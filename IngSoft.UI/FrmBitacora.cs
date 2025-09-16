@@ -27,8 +27,8 @@ namespace IngSoft.UI
 
         private void btnAddMessage_Click(object sender, EventArgs e)
         {
-            var bitacora = new Bitacora {
-                Id = Guid.NewGuid(),
+            var bitacora = new Bitacora 
+            {
                 Usuario = new Usuario { Id = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
                 Fecha = DateTime.Now,
                 Descripcion = "Bitacora creada del tipo Message",
@@ -45,7 +45,6 @@ namespace IngSoft.UI
 
             var bitacora = new Bitacora
             {
-                Id = Guid.NewGuid(),
                 Usuario = new Usuario { Id = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
                 Fecha = DateTime.Now,
                 Descripcion = "Bitacora creada del tipo Warning",
@@ -61,8 +60,7 @@ namespace IngSoft.UI
         {
 
             var bitacora = new Bitacora
-            {
-                Id = Guid.NewGuid(),
+            { 
                 Usuario = new Usuario { Id = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
                 Fecha = DateTime.Now,
                 Descripcion = "Bitacora creada del tipo Error",

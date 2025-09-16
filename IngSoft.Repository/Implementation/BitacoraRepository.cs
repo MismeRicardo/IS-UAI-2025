@@ -8,7 +8,7 @@ using IngSoft.DBConnection.Models;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
 
-namespace IngSoft.Repository
+namespace IngSoft.Repository.Implementation
 {
     public class BitacoraRepository : IBitacoraRepository
     {

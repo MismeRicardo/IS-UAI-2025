@@ -1,4 +1,5 @@
 ﻿using IngSoft.DBConnection.Factory;
+using IngSoft.Repository.Implementation;
 
 namespace IngSoft.Repository.Factory
 {
@@ -8,6 +9,16 @@ namespace IngSoft.Repository.Factory
         {
             var connection = ConnectionFactory.CreateSqlServerConnection();
             return new BitacoraRepository(connection);
+        }
+        public static IIdiomaRepository CreateIdiomaRepository()
+        {
+            var connection = ConnectionFactory.CreateSqlServerConnection();
+            return new IdiomaRepository(connection);
+        }
+        public static IControlIdiomaRepository CreateControlIdiomaRepository()
+        {
+            var connection = ConnectionFactory.CreateSqlServerConnection();
+            return new ControlIdiomaRepository(connection);
         }
     }
 }

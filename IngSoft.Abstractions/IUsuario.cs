@@ -1,9 +1,6 @@
-﻿using System;
-
-namespace IngSoft.Abstractions
+﻿namespace IngSoft.Abstractions
 {
-    public interface IUsuario
+    public interface IUsuario: IEntity
     {
-        Guid Id { get; set; }
     }
 }

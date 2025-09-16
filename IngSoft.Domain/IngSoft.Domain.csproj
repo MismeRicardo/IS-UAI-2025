@@ -44,6 +44,8 @@
     <Compile Include="Bitacora.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Enums\TipoEvento.cs" />
+    <Compile Include="ControlIdioma.cs" />
+    <Compile Include="Idioma.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
