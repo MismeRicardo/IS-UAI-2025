@@ -25,55 +25,6 @@ namespace IngSoft.UI
             CargarBitacora();
         }
 
-        private void btnAddMessage_Click(object sender, EventArgs e)
-        {
-            var bitacora = new Bitacora {
-                Id = Guid.NewGuid(),
-                Usuario = new Usuario { Id = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
-                Fecha = DateTime.Now,
-                Descripcion = "Bitacora creada del tipo Message",
-                Origen = "FrmBitacora",
-                TipoEvento = TipoEvento.Message
-            };
-
-            _bitacoraServices.GuardarBitacora(bitacora);
-            CargarBitacora();
-        }
-
-        private void btnAddWarning_Click(object sender, EventArgs e)
-        {
-
-            var bitacora = new Bitacora
-            {
-                Id = Guid.NewGuid(),
-                Usuario = new Usuario { Id = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
-                Fecha = DateTime.Now,
-                Descripcion = "Bitacora creada del tipo Warning",
-                Origen = "FrmBitacora",
-                TipoEvento = TipoEvento.Warning
-            };
-
-            _bitacoraServices.GuardarBitacora(bitacora);
-            CargarBitacora();
-        }
-
-        private void btnError_Click(object sender, EventArgs e)
-        {
-
-            var bitacora = new Bitacora
-            {
-                Id = Guid.NewGuid(),
-                Usuario = new Usuario { Id = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
-                Fecha = DateTime.Now,
-                Descripcion = "Bitacora creada del tipo Error",
-                Origen = "FrmBitacora",
-                TipoEvento = TipoEvento.Error
-            };
-
-            _bitacoraServices.GuardarBitacora(bitacora);
-            CargarBitacora();
-        }
-
         private void txtBusquedaBitacora_TextChanged(object sender, EventArgs e)
         {
             var filtro = txtBusquedaBitacora.Text.Trim();
@@ -106,23 +57,38 @@ namespace IngSoft.UI
 
         private void dtpFecha_ValueChanged(object sender, EventArgs e)
         {
-            var selectedDate = dtpFecha.Value.Date;
+            dtpFechaHasta.Enabled = true;
+        }
 
-            var filteredBitacoras = _bitacoras.Where(b => b.Fecha.Date == selectedDate).ToList();
+        private void dtpFechaHasta_ValueChanged(object sender, EventArgs e)
+        {
+            var fechaDesde = dtpFechaDesde.Value.Date;
+            var fechaHasta = dtpFechaHasta.Value.Date;
+
+            if(fechaHasta < fechaDesde)
+            {
+                MessageBox.Show("La fecha hasta no puede ser menor a la fecha desde.", "Error de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dtpFechaHasta.Value = fechaDesde;
+                CargarBitacora();
+            }
+
+            var filteredBitacoras = _bitacoras.Where(b => b.Fecha.Date >= fechaDesde && b.Fecha.Date <= fechaHasta).ToList();
             gridBitacora.DataSource = BuildBitacorasDataGridView(filteredBitacoras);
         }
+
         private void chkFiltroDate_CheckedChanged(object sender, EventArgs e)
         {
             if (chkFiltroDate.Checked)
             {
-                dtpFecha.Enabled = true;
+                dtpFechaDesde.Enabled = true;
             }
             else
             {
-                dtpFecha.Enabled = false;
+                dtpFechaDesde.Enabled = false;
                 CargarBitacora();
             }
         }
+
         private void CargarBitacora(string filtro = null)
         {
             if (filtro != null)
@@ -150,5 +116,10 @@ namespace IngSoft.UI
             .OrderByDescending(b => b.Fecha)
             .ToList();
         }
+
+        private void gridBitacora_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            gridBitacora.Columns["Descripcion"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        }        
     }
 }
