@@ -141,7 +141,6 @@ namespace IngSoft.UI
         {
             return bitacoras.Select(b => new BitacoraGridDto
             {
-                Id = b.Id,
                 Fecha = b.Fecha,
                 Descripcion = b.Descripcion,
                 Origen = b.Origen,
