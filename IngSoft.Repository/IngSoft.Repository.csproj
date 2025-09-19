@@ -46,6 +46,7 @@
     <Compile Include="Factory\FactoryRepository.cs" />
     <Compile Include="IBitacoraRepository.cs" />
     <Compile Include="Implementation\UsuarioRepository.cs" />
+    <Compile Include="IUsuarioRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +63,8 @@
       <Name>IngSoft.Services</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

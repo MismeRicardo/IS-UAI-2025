@@ -39,7 +39,7 @@ namespace IngSoft.Repository
                 _connection.EjecutarSinResultado("INSERT INTO Bitacora (Id, UsuarioId, Fecha, Descripcion, Origen, TipoEvento) VALUES (@Id, @UsuarioId, @Fecha, @Descripcion, @Origen, @TipoEvento)", parametros);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _connection.CancelarTransaccion();
                 throw;
@@ -84,7 +84,7 @@ namespace IngSoft.Repository
 
                 return bitacoras;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
