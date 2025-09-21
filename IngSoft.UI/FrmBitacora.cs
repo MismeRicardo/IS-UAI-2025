@@ -2,27 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using IngSoft.Abstractions;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
+using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
+using IngSoft.Services;
 using IngSoft.UI.DTOs;
 
 namespace IngSoft.UI
 {
-    public partial class FrmBitacora : Form
+    public partial class FrmBitacora : Form, IObserver
     {
         private readonly IBitacoraServices _bitacoraServices;
         private List<Bitacora> _bitacoras;
+        private readonly IMultiIdiomaServices _multiIdiomaServices;
         public FrmBitacora()
         {
             InitializeComponent();
             _bitacoraServices = ServicesFactory.CreateBitacoraServices();
+            _multiIdiomaServices = ServicesFactory.CreateMultiIdiomaServices();
         }
 
         private void FrmBitacora_Load(object sender, EventArgs e)
         {
             CargarBitacora();
+            SuscribirseAIdiomaActual();
         }
 
         private void txtBusquedaBitacora_TextChanged(object sender, EventArgs e)
@@ -120,6 +126,24 @@ namespace IngSoft.UI
         private void gridBitacora_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             gridBitacora.Columns["Descripcion"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        }        
+        }
+        private void SuscribirseAIdiomaActual()
+        {
+            // Suscribirse al idioma actual si existe
+            if (MultiIdiomaManager.Idioma != null)
+            {
+                MultiIdiomaManager.Idioma.Suscribir(this);
+            }
+        }
+
+        public void Actualizar()
+        {
+            if (MultiIdiomaManager.Idioma != null)
+            {
+                var controles = _multiIdiomaServices.ObtenerControlesPorIdioma(MultiIdiomaManager.Idioma.Id)
+                    .Cast<IControlIdioma>().ToList();
+                MultiIdiomaManager.CambiarIdiomaControles(this, controles);
+            }
+        }
     }
 }
