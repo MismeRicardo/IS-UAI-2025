@@ -11,6 +11,7 @@ namespace IngSoft.DBConnection
         void CancelarTransaccion();
         void EjecutarSinResultado(string query, Dictionary<string, object> parametros);
         object EjecutarEscalar(string query, Dictionary<string, object> parametros);
+        int ObtenerUltimoId(string tabla, string columnaId);
         List<T> EjecutarDataTable<T>(string query, Dictionary<string, object> parametros) where T : new();
     }
 }

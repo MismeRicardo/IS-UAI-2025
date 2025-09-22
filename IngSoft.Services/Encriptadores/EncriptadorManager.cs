@@ -19,10 +19,16 @@ namespace IngSoft.Services.Encriptadores
         {
             mEncriptadores.Add(new EncriptadorMD5());
         }
-        public string EncriptadorSecuencial(string textoPlano, List<IEncriptador> pEncriptadores)
+
+        public string EncriptadorSecuencial(string textoPlano)
+        {
+            return EncriptadorSecuencial(textoPlano,mEncriptadores);
+        }
+        internal string EncriptadorSecuencial(string textoPlano, List<IEncriptador> pEncriptadores)
         {
             string textoEncriptado = textoPlano;
             List<IEncriptador> encriptadores= pEncriptadores;
+
 
             if (encriptadores == null || encriptadores.Count == 0)
             {
@@ -32,17 +38,17 @@ namespace IngSoft.Services.Encriptadores
             {
                 throw new ArgumentException("El texto plano no puede ser nulo o vacío.");
             }
-            if(encriptadores.Count  > mEncriptadores.Count)
-            {
-                encriptadores = mEncriptadores;
-            }
             foreach (IEncriptador encriptador in encriptadores)
             {
                 textoEncriptado = encriptador.Encriptar(textoEncriptado);
             }
             return textoEncriptado;
         }
-        public bool DesencriptadorSecuencial(string textoEncriptado, List<IEncriptador> encriptadores, string textoPlano = "")
+        public bool DesencriptadorSecuencial(string textoEncriptado, string textoPlano="")
+        {
+            return DesencriptadorSecuencial(textoEncriptado,mEncriptadores,textoPlano);
+        }
+        internal bool DesencriptadorSecuencial(string textoEncriptado, List<IEncriptador> encriptadores, string textoPlano = "")
         {
             string mTextoPlano = textoPlano;
             string mTextoEncriptado = textoEncriptado;
@@ -50,24 +56,24 @@ namespace IngSoft.Services.Encriptadores
             return mTextoPlano.Equals(mTextoEncriptado);
         }
 
-        private string EncriptarKey(string textoPlano, IEncriptadorKey encriptadorKey)
-        {
-            return encriptadorKey.Encriptar(textoPlano);
-        }
+        //private string EncriptarKey(string textoPlano, IEncriptadorKey encriptadorKey)
+        //{
+        //    return encriptadorKey.Encriptar(textoPlano);
+        //}
 
-        private string DesencriptarKey(string textoEncriptado, IEncriptadorKey encriptadorKey)
-        {
-            return encriptadorKey.Desencriptar(textoEncriptado);
-        }
+        //private string DesencriptarKey(string textoEncriptado, IEncriptadorKey encriptadorKey)
+        //{
+        //    return encriptadorKey.Desencriptar(textoEncriptado);
+        //}
 
-        private string EncriptarHash(string textoPlano, IEncriptadorHash encriptadorHash)
-        {
-            return encriptadorHash.Encriptar(textoPlano);
-        }
+        //private string EncriptarHash(string textoPlano, IEncriptadorHash encriptadorHash)
+        //{
+        //    return encriptadorHash.Encriptar(textoPlano);
+        //}
 
-        public bool VerificarHash(string textoPlano,string textoHasheado, IEncriptadorHash encriptadorHash)
-        {
-            return encriptadorHash.VerificarHash(textoPlano, textoHasheado);
-        }
+        //private bool VerificarHash(string textoPlano,string textoHasheado, IEncriptadorHash encriptadorHash)
+        //{
+        //    return encriptadorHash.VerificarHash(textoPlano, textoHasheado);
+        //}
     }
 }

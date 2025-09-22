@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
@@ -94,7 +95,18 @@ namespace IngSoft.DBConnection
             oneCommand.CommandType = CommandType.Text;
             return oneCommand.ExecuteScalar();
         }
-
+        public int ObtenerUltimoId(string tabla, string columnaId)
+        {
+            string query = $"SELECT MAX(@columnaId) FROM @tabla";
+            int id = 0;
+            var parametros = new Dictionary<string, object>
+            {
+                {"@columnaId", columnaId },
+                {"@tabla", tabla }
+            };
+            id = (int)EjecutarEscalar(query, parametros);
+            return id;
+        }
         public void EjecutarSinResultado(string query, Dictionary<string, object> parametros)
         {
             SqlCommand oneCommand = new SqlCommand();

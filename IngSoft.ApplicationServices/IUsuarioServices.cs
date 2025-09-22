@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IngSoft.Repository
+namespace IngSoft.ApplicationServices
 {
-    public interface IUsuarioRepository
+    public interface IUsuarioServices
     {
         void GuardarUsuario(Usuario usuario);
         List<Usuario> ObtenerUsuarios();
-        List<Usuario> ObtenerUsuariosFiltrados(string filtro);
-        void AumentarIntentosFallidos(Usuario usuario);
+        List<Usuario> ObtenerUsuarioFiltrados(string filtro);
         Usuario ObtenerUsuario(Usuario usuario);
     }
 }

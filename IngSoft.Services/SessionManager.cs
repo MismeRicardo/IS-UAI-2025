@@ -1,4 +1,5 @@
 ﻿using IngSoft.Abstractions;
+using IngSoft.Services.Encriptadores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IngSoft.Services
 {
-    internal class SessionManager
+    public class SessionManager
     {
         private static SessionManager uniqueInstance;
         private static IUsuario usuario;
@@ -34,13 +35,26 @@ namespace IngSoft.Services
                 throw new InvalidOperationException("Ya hay un usuario logueado.");
             }
 
+            if (usuarioStored is null || usuarioIngresado is null)
+            {
+                throw new ArgumentNullException("Credenciales inválidas.");
+            }
+            if(!VerificarPassword(usuarioIngresado, usuarioStored))
+            {
+                throw new UnauthorizedAccessException("Credenciales inválidas.");
+            }
+            usuarioIngresado.Contrasena = "";
             SessionManager.usuario = usuarioIngresado;
             return this;
         }
 
-        public bool VerificarPasswordHash(IEncriptadorHash encriptador,IUsuario mUsuario,IUsuario mUsuarioStored)
+        public bool VerificarPassword(IUsuario pUsuario, IUsuario pUsuarioStored)
         {
-            return encriptador.VerificarHash(mUsuario.Contrasena, mUsuarioStored.Contrasena);
+            return new EncriptadorExperto().DesencriptadorSecuencial(pUsuarioStored.Contrasena, pUsuario.Contrasena);
+        }
+        internal bool VerificarPasswordHash(IEncriptadorHash encriptador,IUsuario pUsuario,IUsuario pUsuarioStored)
+        {
+            return encriptador.VerificarHash(pUsuario.Contrasena, pUsuarioStored.Contrasena);
         }
 
 

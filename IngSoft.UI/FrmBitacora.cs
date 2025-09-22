@@ -29,7 +29,7 @@ namespace IngSoft.UI
         {
             var bitacora = new Bitacora {
                 Id = Guid.NewGuid(),
-                Usuario = new Usuario { Id = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
+                Usuario = new Usuario { IdBitacora = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
                 Fecha = DateTime.Now,
                 Descripcion = "Bitacora creada del tipo Message",
                 Origen = "FrmBitacora",
@@ -46,7 +46,7 @@ namespace IngSoft.UI
             var bitacora = new Bitacora
             {
                 Id = Guid.NewGuid(),
-                Usuario = new Usuario { Id = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
+                Usuario = new Usuario { IdBitacora = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
                 Fecha = DateTime.Now,
                 Descripcion = "Bitacora creada del tipo Warning",
                 Origen = "FrmBitacora",
@@ -63,7 +63,7 @@ namespace IngSoft.UI
             var bitacora = new Bitacora
             {
                 Id = Guid.NewGuid(),
-                Usuario = new Usuario { Id = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
+                Usuario = new Usuario { IdBitacora = Guid.Parse("15AD1BFB-52F7-4AD3-BC32-622B933B09FF") },
                 Fecha = DateTime.Now,
                 Descripcion = "Bitacora creada del tipo Error",
                 Origen = "FrmBitacora",

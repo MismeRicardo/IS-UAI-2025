@@ -13,7 +13,7 @@ namespace IngSoft.Repository
     public class BitacoraRepository : IBitacoraRepository
     {
         private readonly IConnection _connection;
-        public BitacoraRepository(IConnection connection)
+        internal BitacoraRepository(IConnection connection)
         {
             _connection = connection ?? ConnectionFactory.CreateSqlServerConnection();
         }
@@ -71,7 +71,7 @@ namespace IngSoft.Repository
                     TipoEvento = (TipoEvento)b.TipoEvento,
                     Usuario = new Usuario
                     {
-                        Id = b.UsuarioId,
+                        IdBitacora = b.UsuarioId,
                         Nombre = b.Nombre,
                         Apellido = b.Apellido,
                         Email = b.Email,
@@ -121,7 +121,7 @@ namespace IngSoft.Repository
                     TipoEvento = (TipoEvento)b.TipoEvento,
                     Usuario = new Usuario
                     {
-                        Id = b.UsuarioId,
+                        IdBitacora = b.UsuarioId,
                         Nombre = b.Nombre,
                         Apellido = b.Apellido,
                         Email = b.Email,
