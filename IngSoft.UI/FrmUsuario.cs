@@ -57,20 +57,31 @@ namespace IngSoft.UI
         {
             Control menuStrip = FrmUsuario.ActiveForm.Controls.Find("menuStrip1", true).FirstOrDefault();
             ToolStripItemCollection botonera = ((MenuStrip)menuStrip).Items;
-            ToolStripItem loginToolStripButton= botonera.Find("loginToolStripMenuItem", true).FirstOrDefault();
-            ToolStripItem logoutToolStripButton = botonera.Find("cerrarSesionToolStripMenuItem", true).FirstOrDefault();
+            ActualizarBotoneraSesion(botonera);
+            FrmUsuario.ActiveForm.Controls.Clear();
+            FrmUsuario.ActiveForm.Controls.Add(menuStrip);
+        }
+
+        private static void ActualizarBotoneraSesion(ToolStripItemCollection botonera)
+        {
+            ToolStripItem loginToolStripButton = botonera["loginToolStripMenuItem"];//botonera.Find("loginToolStripMenuItem", true).FirstOrDefault();
+            ToolStripItem logoutToolStripButton = botonera["cerrarSesionToolStripMenuItem"]; ;//botonera.Find("cerrarSesionToolStripMenuItem", true).FirstOrDefault();
+            ToolStripItem agregarUsuarioToolStripButton = botonera["agregarNuevoToolStripMenuItem"];
+            ToolStripItem verTodosToolStripButton = botonera["verTodosToolStripMenuItem"];
             if (SessionManager.GetInstance().IsLoggedIn())
             {
-                loginToolStripButton.Visible=false;
+                loginToolStripButton.Visible = false;
                 logoutToolStripButton.Visible = true;
+                agregarUsuarioToolStripButton.Visible = true;
+                verTodosToolStripButton.Visible = true;
             }
             else
             {
                 loginToolStripButton.Visible = true;
                 logoutToolStripButton.Visible = false;
+                agregarUsuarioToolStripButton.Visible = false;
+                verTodosToolStripButton.Visible = false;
             }
-            FrmUsuario.ActiveForm.Controls.Clear();
-            FrmUsuario.ActiveForm.Controls.Add(menuStrip);
         }
 
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)

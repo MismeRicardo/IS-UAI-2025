@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IngSoft.DBConnection.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -64,21 +65,37 @@ namespace IngSoft.DBConnection
                 {
                     string columnName = resultDataReader.GetName(i);
                     object columnValue = resultDataReader[i];
-
-                    PropertyInfo pi = resultObject.GetType().GetProperty(columnName);
-                    if (pi != null)
+                    PropertyInfo pi = null;
+                    if (!(resultObject is DBNull))
+                    {
+                        pi = resultObject.GetType().GetProperty(columnName);
+                    }
+                    if (pi != null && !(columnValue is DBNull))
                     {
                         if(pi.PropertyType.Name == "Guid")
                         {
                             try
                             {
-                                pi.SetValue(resultObject, new Guid(columnValue.ToString()));
+                                Guid guid;
+                                if(Guid.TryParse(columnValue.ToString(), out guid))
+                                {
+                                    pi.SetValue(resultObject, guid);
+                                }
+                                else
+                                {
+                                    byte[] bytes = new byte[16];
+                                    BitConverter.GetBytes((int)columnValue).CopyTo(bytes, 0);
+                                    pi.SetValue(resultObject, new Guid(bytes));
+                                    if ((typeof(UsuarioQuerySql)).IsSubclassOf(resultObject.GetType()))
+                                    {
+                                        pi = resultObject.GetType().GetProperty("IdUsuario");
+                                        pi.SetValue(resultObject, columnValue);
+                                    }
+                                }
                             }
                             catch (Exception)
                             {
-                                byte[] bytes = new byte[16];
-                                BitConverter.GetBytes((int)columnValue).CopyTo(bytes, 0);
-                                pi.SetValue(resultObject, new Guid(bytes));
+                                throw;
                             }
                         }
                         else

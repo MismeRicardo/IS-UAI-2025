@@ -43,8 +43,8 @@ namespace IngSoft.Services
             {
                 throw new UnauthorizedAccessException("Credenciales inválidas.");
             }
-            usuarioIngresado.Contrasena = "";
-            SessionManager.usuario = usuarioIngresado;
+            usuarioStored.Contrasena = "";
+            SessionManager.usuario = usuarioStored;
             return this;
         }
 

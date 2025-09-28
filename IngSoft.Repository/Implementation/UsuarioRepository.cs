@@ -79,7 +79,18 @@ namespace IngSoft.Repository
             {
                 if(resultado.Count > 0)
                 {
-                    usuario = resultado.First<Usuario>();
+                    usuario = resultado.Select(u => new Usuario
+                    {
+                        IdUsuario = u.IdUsuario,
+                        Id = EncriptarId(u.Id),
+                        Nombre = u.Nombre,
+                        Apellido = u.Apellido,
+                        Email = u.Email,
+                        Contrasena = u.Contrasena,
+                        Username = u.Username,
+                        Bloqueado = u.Bloqueado,
+                        CantidadIntentos = u.CantidadIntentos
+                    }).First<Usuario>();
                 }
                 else
                 {
@@ -122,7 +133,7 @@ namespace IngSoft.Repository
             };
             int cantIntentos = (int)_connection.EjecutarEscalar(query, parametros);
 
-            if (cantIntentos >= 3)
+            if (cantIntentos >= 2)
             {
                 query = "UPDATE Usuario SET Bloqueado = 1 WHERE Username = @Username";
                 _connection.EjecutarSinResultado(query, parametros);
