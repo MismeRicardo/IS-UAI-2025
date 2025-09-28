@@ -32,9 +32,14 @@ namespace IngSoft.ApplicationServices
         {
             SessionManager session = SessionManager.GetInstance();
             Usuario usuarioStored = ObtenerUsuario(usuario);
+            if(usuarioStored!= null && usuarioStored.Bloqueado)
+            {
+                throw new UnauthorizedAccessException("El usuario se encuentra bloqueado.");
+            }
             try
             {
                 session.LogIn(usuario, usuarioStored);
+                _usuarioRepository.ResetearIntentosFallidos(usuario);
             }
             catch(UnauthorizedAccessException)
             {

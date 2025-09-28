@@ -19,7 +19,10 @@ namespace IngSoft.Services.Encriptadores
         {
             mEncriptadores.Add(new EncriptadorMD5());
         }
-
+        public string EncriptadorOnlyHash(string textoPlano)
+        {
+            return EncriptadorSecuencial(textoPlano,mEncriptadores.Where(e => e is IEncriptadorHash).ToList());
+        }
         public string EncriptadorSecuencial(string textoPlano)
         {
             return EncriptadorSecuencial(textoPlano,mEncriptadores);
@@ -47,6 +50,10 @@ namespace IngSoft.Services.Encriptadores
         public bool DesencriptadorSecuencial(string textoEncriptado, string textoPlano="")
         {
             return DesencriptadorSecuencial(textoEncriptado,mEncriptadores,textoPlano);
+        }
+        public bool DesencriptadorOnlyHash(string textoEncriptado, string textoPlano)
+        {
+            return DesencriptadorSecuencial(textoEncriptado,mEncriptadores.Where(e => e is IEncriptadorHash).ToList(),textoPlano);
         }
         internal bool DesencriptadorSecuencial(string textoEncriptado, List<IEncriptador> encriptadores, string textoPlano = "")
         {

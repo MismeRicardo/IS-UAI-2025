@@ -76,8 +76,8 @@ namespace IngSoft.UI
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EliminarControlesAdicionalesUsuario();
-            FrmUsuarioFlexiblizador.TextBoxCreator("Usuario", new Point(FrmUsuario.ActiveForm.Width / 2 - 230, FrmUsuario.ActiveForm.Height / 8));
-            FrmUsuarioFlexiblizador.TextBoxCreator("Contraseña", new Point((FrmUsuario.ActiveForm.Width / 2 - 280) + (280), FrmUsuario.ActiveForm.Height / 8));
+            FrmUsuarioFlexiblizador.TextBoxCreator("Usuario", new Point(FrmUsuario.ActiveForm.Width / 2 - 100, FrmUsuario.ActiveForm.Height / 4));
+            FrmUsuarioFlexiblizador.TextBoxCreator("Contraseña", new Point((FrmUsuario.ActiveForm.Width / 2 - 100), FrmUsuario.ActiveForm.Height / 8 + FrmUsuario.ActiveForm.Height / 4));
             try
             {
                 FrmUsuarioFlexiblizador.LoginButtonCreator();

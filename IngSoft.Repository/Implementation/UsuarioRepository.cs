@@ -7,7 +7,6 @@ using IngSoft.DBConnection.Factory;
 using IngSoft.Services.Encriptadores;
 using IngSoft.Services;
 
-
 namespace IngSoft.Repository
 {
     public class UsuarioRepository : IUsuarioRepository
@@ -33,14 +32,8 @@ namespace IngSoft.Repository
                 // Verificar si el nombre de usuario ya existe en la base de datos
                 var existeUsuario = _connection.EjecutarEscalar("SELECT COUNT(*) FROM Usuario WHERE UserName = @UserName", new Dictionary<string, object>
                 {
-                    {"@UserName", usuario.UserName }
+                    {"@UserName", usuario.Username }
                 });
-                if (Convert.ToInt32(existeUsuario) > 0)
-                {
-                    throw new Exception("El nombre de usuario ya existe. Por favor, elija otro.");
-                }
-
-
                 // Preparar los parámetros para la consulta SQL
                 var parametros = new Dictionary<string, object>
                 {
@@ -49,12 +42,18 @@ namespace IngSoft.Repository
                     {"@Apellido", usuario.Apellido },
                     {"@Email", usuario.Email },
                     {"@Contrasena", usuario.Contrasena },
-                    {"@UserName", usuario.UserName },
+                    {"@UserName", usuario.Username },
                     {"@Bloqueado", 0},
                     {"@CantidadIntentos", 0}
-
                 };
-                _connection.EjecutarSinResultado("INSERT INTO Usuario (Id, Nombre, Apellido, Email, Contrasena, UserName, Bloqueado, CantidadIntentos) VALUES (@Id, @Nombre, @Apellido, @Email, @Contrasena, @UserName, @Bloqueado, @CantidadIntentos)", parametros);
+                if (Convert.ToInt32(existeUsuario) > 0)
+                {
+                    _connection.EjecutarSinResultado("UPDATE Usuario SET Nombre = @Nombre, Apellido = @Apellido, Email = @Email, Contrasena = @Contrasena, UserName = @UserName, Bloqueado = @Bloqueado, CantidadIntentos = @CantidadIntentos WHERE Username = @UserName", parametros);
+                }
+                else
+                {
+                    _connection.EjecutarSinResultado("INSERT INTO Usuario (Id, Nombre, Apellido, Email, Contrasena, UserName, Bloqueado, CantidadIntentos) VALUES (@Id, @Nombre, @Apellido, @Email, @Contrasena, @UserName, @Bloqueado, @CantidadIntentos)", parametros);
+                }
             }
             catch (Exception)
             {
@@ -72,13 +71,20 @@ namespace IngSoft.Repository
 
             var parametros = new Dictionary<string, object>
             {
-                {"@Username", pUsuario.UserName}
+                {"@Username", pUsuario.Username}
             };
             var resultado = _connection.EjecutarDataTable<Usuario> (query, parametros);
             Usuario usuario = null;
             if (resultado != null)
             {
-                usuario = resultado.First<Usuario>();
+                if(resultado.Count > 0)
+                {
+                    usuario = resultado.First<Usuario>();
+                }
+                else
+                {
+                    throw new UnauthorizedAccessException("Usuario no encontrado.");
+                }
             }
             return usuario;
         }
@@ -90,26 +96,29 @@ namespace IngSoft.Repository
             var resultado = _connection.EjecutarDataTable<Usuario>(query, new Dictionary<string, object>());
             List<Usuario> usuarios = resultado.Select(u => new Usuario
             {
-                IdUsuario = u.IdUsuario,
+                Id = EncriptarId(u.Id),
                 Nombre = u.Nombre,
                 Apellido = u.Apellido,
                 Email = u.Email,
                 Contrasena = u.Contrasena,
-                UserName = u.UserName,
+                Username = u.Username,
                 Bloqueado = u.Bloqueado,
                 CantidadIntentos = u.CantidadIntentos
             }).ToList();
             _connection.FinalizarConexion();
             return usuarios;
         }
-
+        internal Guid EncriptarId(Guid id)
+        {
+            return new Guid(new EncriptadorExperto().EncriptadorOnlyHash(id.ToString()));
+        }
         public void AumentarIntentosFallidos(Usuario usuario)
         {
             _connection.NuevaConexion(connectionString);
             string query = "SELECT CantidadIntentos FROM Usuario WHERE Username = @Username";
             var parametros = new Dictionary<string, object>
             {
-                {"@Username", usuario.UserName}
+                {"@Username", usuario.Username}
             };
             int cantIntentos = (int)_connection.EjecutarEscalar(query, parametros);
 
@@ -125,7 +134,19 @@ namespace IngSoft.Repository
             }
             _connection.FinalizarConexion();
         }
-            
+
+        public void ResetearIntentosFallidos(Usuario usuario)
+        {
+            _connection.NuevaConexion(connectionString);
+            string query = "UPDATE Usuario SET CantidadIntentos = 0 WHERE Username = @Username";
+            var parametros = new Dictionary<string, object>
+            {
+                {"@Username", usuario.Username}
+            };
+            _connection.EjecutarSinResultado(query, parametros);
+            _connection.FinalizarConexion();
+        }
+
         public List<Usuario> ObtenerUsuariosFiltrados(string filtro)
         {
             _connection.NuevaConexion(connectionString);

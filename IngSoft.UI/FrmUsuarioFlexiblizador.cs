@@ -68,7 +68,7 @@ namespace IngSoft.UI
                 usuarioServices.GuardarUsuario(new Usuario
                 {
                     IdUsuario = 0,
-                    UserName = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                    Username = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
                     Nombre = FrmUsuario.ActiveForm.Controls.Find("txtNombre", true).FirstOrDefault() is TextBox txtNombre ? txtNombre.Text : string.Empty,
                     Apellido = FrmUsuario.ActiveForm.Controls.Find("txtApellido", true).FirstOrDefault() is TextBox txtApellido ? txtApellido.Text : string.Empty,
                     Email = FrmUsuario.ActiveForm.Controls.Find("txtEmail", true).FirstOrDefault() is TextBox txtEmail ? txtEmail.Text : string.Empty,
@@ -88,7 +88,7 @@ namespace IngSoft.UI
             IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
             Usuario mUsuarioActual = new Usuario
             {
-                UserName = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                Username = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
                 Contrasena = FrmUsuario.ActiveForm.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty
             };
             try
@@ -99,10 +99,10 @@ namespace IngSoft.UI
             }
             catch(UnauthorizedAccessException UnAcExc)
             {
-                throw new UnauthorizedAccessException("Acceso no autorizado", UnAcExc);
+                MessageBox.Show($"Error de autenticación: {UnAcExc.Message}");
             }
             catch (Exception ex) {
-                throw new Exception("Error inesperado", ex);
+                MessageBox.Show($"Error al iniciar sesión: {ex.Message}");
             }
         }
         internal static void GuardarUsuarioButtonCreator()
@@ -161,8 +161,28 @@ namespace IngSoft.UI
                 Visible = true,
                 Enabled = true,
             };
-            dataGridViewUsuarios.DataSource = null;
-            dataGridViewUsuarios.DataSource = pUsuarios;
+
+
+            //transformar la lista de usuarios en un DataTable
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("Id", typeof(Guid));
+            dataTable.Columns.Add("Username", typeof(string));
+            dataTable.Columns.Add("Contrasena", typeof(string));
+            dataTable.Columns.Add("Email", typeof(string));
+            dataTable.Columns.Add("Nombre", typeof(string));
+            dataTable.Columns.Add("Apellido", typeof(string));
+            dataTable.Columns.Add("Bloqueado", typeof(bool));
+            dataTable.Columns.Add("CantidadIntentos", typeof(int));
+            foreach (var usuario in pUsuarios)
+            {
+                dataTable.Rows.Add(usuario.Id, usuario.Username, usuario.Contrasena, usuario.Email, usuario.Nombre, usuario.Apellido, usuario.Bloqueado, usuario.CantidadIntentos);
+            }
+
+            dataGridViewUsuarios.DataSource = dataTable;
+
+            //dataGridViewUsuarios.DataSource = null; 
+            //dataGridViewUsuarios.DataSource = pUsuarios;
+
             dataGridViewUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewUsuarios.MultiSelect = false;
@@ -171,13 +191,18 @@ namespace IngSoft.UI
             dataGridViewUsuarios.AllowUserToDeleteRows = false;
             dataGridViewUsuarios.AllowUserToOrderColumns = true;
             dataGridViewUsuarios.RowHeadersVisible = true;
-            if (FrmUsuario.ActiveForm.Controls.Find(dataGridViewUsuarios.Name, true).Length == 0)
+
+            //var columna = dataGridViewUsuarios.Columns;
+
+            //dataGridViewUsuarios.Columns["IdBitacora"].Visible = false;
+            var dataGridView = FrmUsuario.ActiveForm.Controls.Find(dataGridViewUsuarios.Name, true);
+            if (dataGridView.Length == 0)
             {
                 FrmUsuario.ActiveForm.Controls.Add(dataGridViewUsuarios);
             }
-            else if (FrmUsuario.ActiveForm.Controls.Find(dataGridViewUsuarios.Name, true).Length > 0)
+            else if (dataGridView.Length > 0)
             {
-                var existingDataGridView = FrmUsuario.ActiveForm.Controls.Find(dataGridViewUsuarios.Name, true).FirstOrDefault() as DataGridView;
+                var existingDataGridView = dataGridView.FirstOrDefault() as DataGridView;
                 FrmUsuario.ActiveForm.Controls.Remove(existingDataGridView);
                 FrmUsuario.ActiveForm.Controls.Add(dataGridViewUsuarios);
             }
