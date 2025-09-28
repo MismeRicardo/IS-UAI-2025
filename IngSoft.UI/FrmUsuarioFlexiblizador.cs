@@ -1,0 +1,187 @@
+﻿using IngSoft.ApplicationServices;
+using IngSoft.ApplicationServices.Factory;
+using IngSoft.Domain;
+using IngSoft.Services;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+
+namespace IngSoft.UI
+{
+    internal static class FrmUsuarioFlexiblizador
+    {
+        internal static void TextBoxCreator(string param, Point position)
+        {
+            Label labelUsuario = new Label
+            {
+                Name = $"lbl{param}",
+                Location = new Point(position.X, position.Y - 20),
+                Size = new Size(200, 20),
+                Text = param,
+                Visible = true
+            };
+            TextBox txtUsuario = new TextBox
+            {
+                Name = $"txt{param}",
+                Location = new Point(position.X, position.Y),
+                Size = new Size(200, 30),
+                Text = "",
+                Visible = true,
+                Enabled = true,
+                ReadOnly = false,
+                Font = new Font("Arial", 10)
+            };
+
+            if (FrmUsuario.ActiveForm.Controls.Find(txtUsuario.Name, true).Length == 0)
+            {
+                FrmUsuario.ActiveForm.Controls.Add(labelUsuario);
+                FrmUsuario.ActiveForm.Controls.Add(txtUsuario);
+            }
+            else if (FrmUsuario.ActiveForm.Controls.Find(txtUsuario.Name, true).Length > 0)
+            {
+                var existingTextBox = FrmUsuario.ActiveForm.Controls.Find(txtUsuario.Name, true).FirstOrDefault() as TextBox;
+                var existingLabel = FrmUsuario.ActiveForm.Controls.Find(labelUsuario.Name, true).FirstOrDefault() as Label;
+                FrmUsuario.ActiveForm.Controls.Remove(existingTextBox);
+                FrmUsuario.ActiveForm.Controls.Remove(existingLabel);
+                FrmUsuario.ActiveForm.Controls.Add(labelUsuario);
+                FrmUsuario.ActiveForm.Controls.Add(txtUsuario);
+
+
+            }
+        }
+
+        private static void btnGuardar_Click(object sender, EventArgs e)
+        {
+            // Lógica para manejar el evento de clic del botón Guardar Usuario
+            IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
+
+            try
+            {
+                usuarioServices.GuardarUsuario(new Usuario
+                {
+                    IdUsuario = 0,
+                    UserName = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                    Nombre = FrmUsuario.ActiveForm.Controls.Find("txtNombre", true).FirstOrDefault() is TextBox txtNombre ? txtNombre.Text : string.Empty,
+                    Apellido = FrmUsuario.ActiveForm.Controls.Find("txtApellido", true).FirstOrDefault() is TextBox txtApellido ? txtApellido.Text : string.Empty,
+                    Email = FrmUsuario.ActiveForm.Controls.Find("txtEmail", true).FirstOrDefault() is TextBox txtEmail ? txtEmail.Text : string.Empty,
+                    Contrasena = FrmUsuario.ActiveForm.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty
+                });
+                MessageBox.Show("Usuario guardado con éxito.");
+                new FrmUsuario().EliminarControlesAdicionalesUsuario();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al guardar el usuario: {ex.Message}");
+            }
+        }
+        private static void BtnLogin_Click(object sender, EventArgs e)
+        {
+            // Lógica para manejar el evento de clic del botón Login
+            IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
+            Usuario mUsuarioActual = new Usuario
+            {
+                UserName = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                Contrasena = FrmUsuario.ActiveForm.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty
+            };
+            try
+            {
+                usuarioServices.LoginUser(mUsuarioActual);
+                MessageBox.Show($"Iniciado sesion: {SessionManager.GetUsuario().UserName}");
+                new FrmUsuario().EliminarControlesAdicionalesUsuario();
+            }
+            catch(UnauthorizedAccessException UnAcExc)
+            {
+                throw new UnauthorizedAccessException("Acceso no autorizado", UnAcExc);
+            }
+            catch (Exception ex) {
+                throw new Exception("Error inesperado", ex);
+            }
+        }
+        internal static void GuardarUsuarioButtonCreator()
+        {
+            Button btnGuardar = new Button
+            {
+                Name = "btnGuardarUsuario",
+                Location = new Point((FrmUsuario.ActiveForm.Width / 2) - 100, (FrmUsuario.ActiveForm.Height / 2 + FrmUsuario.ActiveForm.Height / 4)),
+                Size = new Size(200, 30),
+                Text = "Guardar Usuario",
+                Visible = true,
+                Enabled = true
+            };
+            btnGuardar.Click += btnGuardar_Click;
+            if (FrmUsuario.ActiveForm.Controls.Find(btnGuardar.Name, true).Length == 0)
+            {
+                FrmUsuario.ActiveForm.Controls.Add(btnGuardar);
+            }
+            else if (FrmUsuario.ActiveForm.Controls.Find(btnGuardar.Name, true).Length > 0)
+            {
+                var existingButton = FrmUsuario.ActiveForm.Controls.Find(btnGuardar.Name, true).FirstOrDefault() as Button;
+                FrmUsuario.ActiveForm.Controls.Remove(existingButton);
+                FrmUsuario.ActiveForm.Controls.Add(btnGuardar);
+            }
+        }
+        internal static void LoginButtonCreator()
+        {
+            Button btnLogin = new Button
+            {
+                Name = "btnLogin",
+                Location = new Point((FrmUsuario.ActiveForm.Width / 2) - 100, (FrmUsuario.ActiveForm.Height / 2 + FrmUsuario.ActiveForm.Height / 4)),
+                Size = new Size(200, 30),
+                Text = "Login",
+                Visible = true,
+                Enabled = true
+            };
+            btnLogin.Click += BtnLogin_Click;
+            if (FrmUsuario.ActiveForm.Controls.Find(btnLogin.Name, true).Length == 0)
+            {
+                FrmUsuario.ActiveForm.Controls.Add(btnLogin);
+            }
+            else if (FrmUsuario.ActiveForm.Controls.Find(btnLogin.Name, true).Length > 0)
+            {
+                var existingButton = FrmUsuario.ActiveForm.Controls.Find(btnLogin.Name, true).FirstOrDefault() as Button;
+                FrmUsuario.ActiveForm.Controls.Remove(existingButton);
+                FrmUsuario.ActiveForm.Controls.Add(btnLogin);
+            }
+        }
+        internal static void DataGridViewUsuarioCreator(List<Usuario> pUsuarios)
+        {
+            DataGridView dataGridViewUsuarios = new DataGridView
+            {
+                Name = "dataGridViewUsuarios",
+                Location = new Point(FrmUsuario.ActiveForm.Width / 8, FrmUsuario.ActiveForm.Height / 8),
+                Size = new Size(FrmUsuario.ActiveForm.Width / 2 + FrmUsuario.ActiveForm.Width / 4, FrmUsuario.ActiveForm.Height / 2 + FrmUsuario.ActiveForm.Height / 4),
+                Visible = true,
+                Enabled = true,
+            };
+            dataGridViewUsuarios.DataSource = null;
+            dataGridViewUsuarios.DataSource = pUsuarios;
+            dataGridViewUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewUsuarios.MultiSelect = false;
+            dataGridViewUsuarios.ReadOnly = true;
+            dataGridViewUsuarios.AllowUserToAddRows = false;
+            dataGridViewUsuarios.AllowUserToDeleteRows = false;
+            dataGridViewUsuarios.AllowUserToOrderColumns = true;
+            dataGridViewUsuarios.RowHeadersVisible = true;
+            if (FrmUsuario.ActiveForm.Controls.Find(dataGridViewUsuarios.Name, true).Length == 0)
+            {
+                FrmUsuario.ActiveForm.Controls.Add(dataGridViewUsuarios);
+            }
+            else if (FrmUsuario.ActiveForm.Controls.Find(dataGridViewUsuarios.Name, true).Length > 0)
+            {
+                var existingDataGridView = FrmUsuario.ActiveForm.Controls.Find(dataGridViewUsuarios.Name, true).FirstOrDefault() as DataGridView;
+                FrmUsuario.ActiveForm.Controls.Remove(existingDataGridView);
+                FrmUsuario.ActiveForm.Controls.Add(dataGridViewUsuarios);
+            }
+        }
+
+    }
+}

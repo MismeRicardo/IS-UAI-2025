@@ -68,7 +68,23 @@ namespace IngSoft.DBConnection
                     PropertyInfo pi = resultObject.GetType().GetProperty(columnName);
                     if (pi != null)
                     {
-                        pi.SetValue(resultObject, columnValue);
+                        if(pi.PropertyType.Name == "Guid")
+                        {
+                            try
+                            {
+                                pi.SetValue(resultObject, new Guid(columnValue.ToString()));
+                            }
+                            catch (Exception)
+                            {
+                                byte[] bytes = new byte[16];
+                                BitConverter.GetBytes((int)columnValue).CopyTo(bytes, 0);
+                                pi.SetValue(resultObject, new Guid(bytes));
+                            }
+                        }
+                        else
+                        {
+                            pi.SetValue(resultObject, columnValue);
+                        }
                     }
                 }
 
@@ -91,20 +107,19 @@ namespace IngSoft.DBConnection
             {
                 oneCommand.Parameters.AddWithValue(p.Key, p.Value);
             }
-
             oneCommand.CommandType = CommandType.Text;
             return oneCommand.ExecuteScalar();
         }
         public int ObtenerUltimoId(string tabla, string columnaId)
         {
-            string query = $"SELECT MAX(@columnaId) FROM @tabla";
+            string query = $"SELECT MAX({columnaId}) FROM {tabla}";
             int id = 0;
-            var parametros = new Dictionary<string, object>
+            var parametros = new Dictionary<string, object> { };
+            var ob=EjecutarEscalar(query, parametros);
+            if (ob != DBNull.Value && ob != null)
             {
-                {"@columnaId", columnaId },
-                {"@tabla", tabla }
-            };
-            id = (int)EjecutarEscalar(query, parametros);
+                id = (int)(ob);
+            }
             return id;
         }
         public void EjecutarSinResultado(string query, Dictionary<string, object> parametros)

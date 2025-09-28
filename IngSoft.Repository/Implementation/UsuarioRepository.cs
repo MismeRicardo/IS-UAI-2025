@@ -5,6 +5,8 @@ using IngSoft.Domain;
 using IngSoft.DBConnection;
 using IngSoft.DBConnection.Factory;
 using IngSoft.Services.Encriptadores;
+using IngSoft.Services;
+
 
 namespace IngSoft.Repository
 {
@@ -27,10 +29,22 @@ namespace IngSoft.Repository
             try
             {
                 _connection.IniciarTransaccion();
-               usuario.Id = _connection.ObtenerUltimoId("Usuario", "Id")+1;
+               usuario.IdUsuario = _connection.ObtenerUltimoId("Usuario", "Id")+1;
+                // Verificar si el nombre de usuario ya existe en la base de datos
+                var existeUsuario = _connection.EjecutarEscalar("SELECT COUNT(*) FROM Usuario WHERE UserName = @UserName", new Dictionary<string, object>
+                {
+                    {"@UserName", usuario.UserName }
+                });
+                if (Convert.ToInt32(existeUsuario) > 0)
+                {
+                    throw new Exception("El nombre de usuario ya existe. Por favor, elija otro.");
+                }
+
+
+                // Preparar los parámetros para la consulta SQL
                 var parametros = new Dictionary<string, object>
                 {
-                    {"@Id", usuario.Id},
+                    {"@Id", usuario.IdUsuario},
                     {"@Nombre", usuario.Nombre },
                     {"@Apellido", usuario.Apellido },
                     {"@Email", usuario.Email },
@@ -40,7 +54,7 @@ namespace IngSoft.Repository
                     {"@CantidadIntentos", 0}
 
                 };
-                _connection.EjecutarSinResultado("INSERT INTO Usuario (Id, Nombre, Apellido, Email, Contrasena, UserName) VALUES (@Id, @Nombre, @Apellido, @Email, @Contrasena, @UserName)", parametros);
+                _connection.EjecutarSinResultado("INSERT INTO Usuario (Id, Nombre, Apellido, Email, Contrasena, UserName, Bloqueado, CantidadIntentos) VALUES (@Id, @Nombre, @Apellido, @Email, @Contrasena, @UserName, @Bloqueado, @CantidadIntentos)", parametros);
             }
             catch (Exception)
             {
@@ -50,27 +64,45 @@ namespace IngSoft.Repository
             _connection.AceptarTransaccion();
             _connection.FinalizarConexion();
         }
+
         public Usuario ObtenerUsuario(Usuario pUsuario)
         {
             _connection.NuevaConexion(connectionString);
             string query = "SELECT Id, Nombre, Apellido, Email, Contrasena, Username, Bloqueado, CantidadIntentos FROM Usuario WHERE Username = @Username";
-            EncriptadorExperto encriptadorExperto = new EncriptadorExperto();
 
             var parametros = new Dictionary<string, object>
             {
-                {"@Username", $"%{pUsuario.UserName}%"}
+                {"@Username", pUsuario.UserName}
             };
-            Usuario usuario = (Usuario)_connection.EjecutarEscalar(query, parametros);
+            var resultado = _connection.EjecutarDataTable<Usuario> (query, parametros);
+            Usuario usuario = null;
+            if (resultado != null)
+            {
+                usuario = resultado.First<Usuario>();
+            }
             return usuario;
         }
+
         public List<Usuario> ObtenerUsuarios()
         {
             _connection.NuevaConexion(connectionString);
             string query = "SELECT Id, Nombre, Apellido, Email, Contrasena, Username, Bloqueado, CantidadIntentos FROM Usuario";
-            var usuarios = _connection.EjecutarDataTable<Usuario>(query, new Dictionary<string, object>());
+            var resultado = _connection.EjecutarDataTable<Usuario>(query, new Dictionary<string, object>());
+            List<Usuario> usuarios = resultado.Select(u => new Usuario
+            {
+                IdUsuario = u.IdUsuario,
+                Nombre = u.Nombre,
+                Apellido = u.Apellido,
+                Email = u.Email,
+                Contrasena = u.Contrasena,
+                UserName = u.UserName,
+                Bloqueado = u.Bloqueado,
+                CantidadIntentos = u.CantidadIntentos
+            }).ToList();
             _connection.FinalizarConexion();
             return usuarios;
         }
+
         public void AumentarIntentosFallidos(Usuario usuario)
         {
             _connection.NuevaConexion(connectionString);

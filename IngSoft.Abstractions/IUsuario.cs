@@ -6,7 +6,7 @@ namespace IngSoft.Abstractions
     public interface IUsuario
     {
         Guid IdBitacora { get; set; }
-        int Id { get; set; }
+        int IdUsuario { get; set; }
         string UserName {  get; set; }
         string Contrasena {  get; set; }
     }

@@ -58,7 +58,7 @@ namespace IngSoft.Repository
 
                 var query = @"SELECT b.Id, b.Descripcion, b.Fecha, b.Origen, b.TipoEvento, u.Id AS UsuarioId, u.Nombre, u.Apellido, u.Email, u.Contrasena, u.UserName 
                               FROM Bitacora b
-                              JOIN Usuario u ON b.UsuarioId = u.Id";
+                              LEFT JOIN Usuario u ON b.UsuarioId = u.Id";
 
                 var resultado = _connection.EjecutarDataTable<BitacoraQuerySql>(query, new Dictionary<string, object>());
 

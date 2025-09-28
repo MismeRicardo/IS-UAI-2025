@@ -18,7 +18,15 @@ namespace IngSoft.ApplicationServices
 
         public void GuardarUsuario(Usuario usuario)
         {
-            _usuarioRepository.GuardarUsuario(usuario);
+            try
+            {
+               _usuarioRepository.GuardarUsuario(usuario);
+            }
+            catch(Exception)
+            {
+                
+                throw;
+            }
         }
         public SessionManager LoginUser(Usuario usuario)
         {
@@ -38,6 +46,10 @@ namespace IngSoft.ApplicationServices
                 throw;
             }
             return session;
+        }
+        public void LogOutUser()
+        {
+            SessionManager.GetInstance().LogOut();
         }
         public Usuario ObtenerUsuario(Usuario usuario)
         {

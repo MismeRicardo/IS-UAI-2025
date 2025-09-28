@@ -64,11 +64,11 @@ namespace IngSoft.Services
             uniqueInstance = null;
             usuario = null;
         }
-        public static void SetUsuario(IUsuario usuario)
-        {
-            if (uniqueInstance == null)
-            {
-            }
-        }
+        //internal static void SetUsuario(IUsuario usuario)
+        //{
+        //    if (uniqueInstance == null)
+        //    {
+        //    }
+        //}
     }
 }

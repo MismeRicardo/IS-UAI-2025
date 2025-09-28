@@ -1,4 +1,5 @@
 ﻿using IngSoft.Domain;
+using IngSoft.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace IngSoft.ApplicationServices
         List<Usuario> ObtenerUsuarios();
         List<Usuario> ObtenerUsuarioFiltrados(string filtro);
         Usuario ObtenerUsuario(Usuario usuario);
+        SessionManager LoginUser(Usuario usuario);
+        void LogOutUser();
     }
 }
