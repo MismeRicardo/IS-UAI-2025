@@ -22,7 +22,6 @@ namespace IngSoft.Repository
 
         public void GuardarUsuario(Usuario usuario)
         {
-            var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["IngSoftConnection"].ConnectionString;
             EncriptadorExperto mEncritpador = new EncriptadorExperto();
             usuario.Contrasena = mEncritpador.EncriptadorSecuencial(usuario.Contrasena);
             _connection.NuevaConexion(connectionString);
