@@ -6,6 +6,7 @@ using IngSoft.DBConnection;
 using IngSoft.DBConnection.Factory;
 using IngSoft.Services.Encriptadores;
 using IngSoft.Services;
+using IngSoft.DBConnection.Models;
 
 namespace IngSoft.Repository
 {
@@ -73,7 +74,7 @@ namespace IngSoft.Repository
             {
                 {"@Username", pUsuario.Username}
             };
-            var resultado = _connection.EjecutarDataTable<Usuario> (query, parametros);
+            var resultado = _connection.EjecutarDataTable<UsuarioQuerySql> (query, parametros);
             Usuario usuario = null;
             if (resultado != null)
             {
@@ -104,7 +105,7 @@ namespace IngSoft.Repository
         {
             _connection.NuevaConexion(connectionString);
             string query = "SELECT Id, Nombre, Apellido, Email, Contrasena, Username, Bloqueado, CantidadIntentos FROM Usuario";
-            var resultado = _connection.EjecutarDataTable<Usuario>(query, new Dictionary<string, object>());
+            var resultado = _connection.EjecutarDataTable<UsuarioQuerySql>(query, new Dictionary<string, object>());
             List<Usuario> usuarios = resultado.Select(u => new Usuario
             {
                 Id = EncriptarId(u.Id),
@@ -140,6 +141,8 @@ namespace IngSoft.Repository
             }
             else
             {
+                query = "UPDATE Usuario SET Bloqueado = 1 WHERE Username = @Username";
+                _connection.EjecutarSinResultado(query, parametros);
                 query = "UPDATE Usuario SET CantidadIntentos = CantidadIntentos + 1 WHERE Username = @Username";
                 _connection.EjecutarSinResultado(query, parametros);
             }
@@ -166,7 +169,18 @@ namespace IngSoft.Repository
             {
                 {"@Filtro", $"%{filtro}%"}
             };
-            var usuarios = _connection.EjecutarDataTable<Usuario>(query, parametros);
+            var resultado = _connection.EjecutarDataTable<UsuarioQuerySql>(query, parametros);
+             List<Usuario> usuarios = resultado.Select(u => new Usuario
+            {
+                Id = EncriptarId(u.Id),
+                Nombre = u.Nombre,
+                Apellido = u.Apellido,
+                Email = u.Email,
+                Contrasena = u.Contrasena,
+                Username = u.Username,
+                Bloqueado = u.Bloqueado,
+                CantidadIntentos = u.CantidadIntentos
+            }).ToList();
             _connection.FinalizarConexion();
             return usuarios;
         }
