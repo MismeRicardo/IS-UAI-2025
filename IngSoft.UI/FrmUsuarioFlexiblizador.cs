@@ -15,7 +15,7 @@ namespace IngSoft.UI
     internal static class FrmUsuarioFlexiblizador
     {
         // Delegado para registrar en la bitácora
-        private static void RegistrarEnBitacora(Usuario usuario, string descripcion, string origen, TipoEvento tipoEvento)
+        internal static void RegistrarEnBitacora(Usuario usuario, string descripcion, string origen, TipoEvento tipoEvento)
         {
             IBitacoraServices bitacoraServices = ServicesFactory.CreateBitacoraServices();
             var bitacora = new Bitacora

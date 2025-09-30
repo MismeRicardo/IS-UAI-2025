@@ -101,6 +101,7 @@ namespace IngSoft.UI
 
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            _usuarioServices.SetRegistradoBitacora(FrmUsuarioFlexiblizador.RegistrarEnBitacora);
             _usuarioServices.LogOutUser();
             EliminarControlesAdicionalesUsuario();
         }

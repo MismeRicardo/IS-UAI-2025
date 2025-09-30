@@ -3,7 +3,6 @@ using IngSoft.Domain;
 using IngSoft.Repository;
 using IngSoft.Services;
 using IngSoft.Repository.Factory;
-using IngSoft.ApplicationServices.Factory;
 using System.Collections.Generic;
 using System;
 using IngSoft.Domain.Enums;
@@ -22,7 +21,7 @@ namespace IngSoft.ApplicationServices
 
         public void SetRegistradoBitacora(Action<Usuario, string, string, TipoEvento> registrarEnBitacora)
         {
-            _registrarEnBitacora = registrarEnBitacora ?? LogOnBitacora;
+            _registrarEnBitacora = registrarEnBitacora; //?? LogOnBitacora;
         }
 
         public void GuardarUsuario(Usuario usuario)
@@ -67,6 +66,7 @@ namespace IngSoft.ApplicationServices
         }
         public void LogOutUser()
         {
+            _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Cierre de sesión exitoso", "LogOut", TipoEvento.Message);
             SessionManager.GetInstance().LogOut();
         }
         public Usuario ObtenerUsuario(Usuario usuario)
@@ -84,21 +84,21 @@ namespace IngSoft.ApplicationServices
             return _usuarioRepository.ObtenerUsuarios();
         }
 
-        private void LogOnBitacora(Usuario usuario, string descripcion, string origen,TipoEvento tipoEvento)
-        {
-            IBitacoraServices _bitacoraServices;
-            _bitacoraServices = ServicesFactory.CreateBitacoraServices();
-            var bitacora = new Bitacora
-            {
-                Id = Guid.NewGuid(),
-                Usuario = usuario,
-                Fecha = DateTime.Now,
-                Descripcion = descripcion,
-                Origen = origen,
-                TipoEvento = tipoEvento
-            };
-            _bitacoraServices.GuardarBitacora(bitacora);
-        }
+        //private void LogOnBitacora(Usuario usuario, string descripcion, string origen,TipoEvento tipoEvento)
+        //{
+        //    IBitacoraServices _bitacoraServices;
+        //    _bitacoraServices = ServicesFactory.CreateBitacoraServices();
+        //    var bitacora = new Bitacora
+        //    {
+        //        Id = Guid.NewGuid(),
+        //        Usuario = usuario,
+        //        Fecha = DateTime.Now,
+        //        Descripcion = descripcion,
+        //        Origen = origen,
+        //        TipoEvento = tipoEvento
+        //    };
+        //    _bitacoraServices.GuardarBitacora(bitacora);
+        //}
     }
 }
 
