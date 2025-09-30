@@ -58,6 +58,19 @@ namespace IngSoft.UI
         private void dtpFecha_ValueChanged(object sender, EventArgs e)
         {
             dtpFechaHasta.Enabled = true;
+
+            var fechaDesde = dtpFechaDesde.Value.Date;
+            var fechaHasta = dtpFechaHasta.Value.Date;
+
+            if (fechaHasta < fechaDesde)
+            {
+                MessageBox.Show("La fecha hasta no puede ser menor a la fecha desde.", "Error de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dtpFechaHasta.Value = fechaDesde;
+                CargarBitacora();
+            }
+
+            var filteredBitacoras = _bitacoras.Where(b => b.Fecha.Date >= fechaDesde && b.Fecha.Date <= fechaHasta).ToList();
+            gridBitacora.DataSource = BuildBitacorasDataGridView(filteredBitacoras);
         }
 
         private void dtpFechaHasta_ValueChanged(object sender, EventArgs e)
