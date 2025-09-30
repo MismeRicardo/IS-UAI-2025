@@ -2,22 +2,34 @@
 using IngSoft.ApplicationServices.Factory;
 using IngSoft.Domain;
 using IngSoft.Services;
+using IngSoft.Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
 
 namespace IngSoft.UI
 {
     internal static class FrmUsuarioFlexiblizador
     {
+        // Delegado para registrar en la bitácora
+        private static void RegistrarEnBitacora(Usuario usuario, string descripcion, string origen, TipoEvento tipoEvento)
+        {
+            IBitacoraServices bitacoraServices = ServicesFactory.CreateBitacoraServices();
+            var bitacora = new Bitacora
+            {
+                Id = Guid.NewGuid(),
+                Usuario = usuario,
+                Fecha = DateTime.Now,
+                Descripcion = descripcion,
+                Origen = origen,
+                TipoEvento = tipoEvento
+            };
+            bitacoraServices.GuardarBitacora(bitacora);
+        }
+
         internal static void TextBoxCreator(string param, Point position)
         {
             Label labelUsuario = new Label
@@ -62,7 +74,8 @@ namespace IngSoft.UI
         {
             // Lógica para manejar el evento de clic del botón Guardar Usuario
             IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
-
+            // Inyecta el delegado al servicio
+           usuarioServices.SetRegistradoBitacora(RegistrarEnBitacora);
             try
             {
                 usuarioServices.GuardarUsuario(new Usuario
@@ -84,8 +97,11 @@ namespace IngSoft.UI
         }
         private static void BtnLogin_Click(object sender, EventArgs e)
         {
-            // Lógica para manejar el evento de clic del botón Login
             IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
+            // Inyecta el delegado al servicio
+            usuarioServices.SetRegistradoBitacora(RegistrarEnBitacora);
+
+
             Usuario mUsuarioActual = new Usuario
             {
                 Username = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,

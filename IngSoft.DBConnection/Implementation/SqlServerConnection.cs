@@ -86,7 +86,8 @@ namespace IngSoft.DBConnection
                                     byte[] bytes = new byte[16];
                                     BitConverter.GetBytes((int)columnValue).CopyTo(bytes, 0);
                                     pi.SetValue(resultObject, new Guid(bytes));
-                                    if ((typeof(UsuarioQuerySql)).IsSubclassOf(resultObject.GetType()))
+                                    //if ((typeof(UsuarioQuerySql)).IsSubclassOf(resultObject.GetType()))
+                                    if(resultObject.GetType().Equals(typeof(UsuarioQuerySql)))
                                     {
                                         pi = resultObject.GetType().GetProperty("IdUsuario");
                                         pi.SetValue(resultObject, columnValue);
