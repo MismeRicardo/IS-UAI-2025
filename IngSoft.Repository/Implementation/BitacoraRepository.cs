@@ -13,7 +13,7 @@ namespace IngSoft.Repository
     public class BitacoraRepository : IBitacoraRepository
     {
         private readonly IConnection _connection;
-        public BitacoraRepository(IConnection connection)
+        internal BitacoraRepository(IConnection connection)
         {
             _connection = connection ?? ConnectionFactory.CreateSqlServerConnection();
         }
@@ -29,17 +29,17 @@ namespace IngSoft.Repository
                 var parametros = new Dictionary<string, object>
                 {
                     {"@Id", bitacora.Id},
-                    {"@UsuarioId", bitacora.Usuario.Id },
+                    {"@IdUsuario", bitacora.Usuario.IdUsuario },
                     {"@Fecha", bitacora.Fecha },
                     {"@Descripcion", bitacora.Descripcion },
                     {"@Origen", bitacora.Origen },
                     {"@TipoEvento", bitacora.TipoEvento }
                 };
 
-                _connection.EjecutarSinResultado("INSERT INTO Bitacora (Id, UsuarioId, Fecha, Descripcion, Origen, TipoEvento) VALUES (@Id, @UsuarioId, @Fecha, @Descripcion, @Origen, @TipoEvento)", parametros);
+                _connection.EjecutarSinResultado("INSERT INTO Bitacora (Id, IdUsuario, Fecha, Descripcion, Origen, TipoEvento) VALUES (@Id, @IdUsuario, @Fecha, @Descripcion, @Origen, @TipoEvento)", parametros);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _connection.CancelarTransaccion();
                 throw;
@@ -56,9 +56,9 @@ namespace IngSoft.Repository
 
                 _connection.NuevaConexion(connectionString);
 
-                var query = @"SELECT b.Id, b.Descripcion, b.Fecha, b.Origen, b.TipoEvento, u.Id AS UsuarioId, u.Nombre, u.Apellido, u.Email, u.Contrasena, u.UserName 
+                var query = @"SELECT b.Id, b.Descripcion, b.Fecha, b.Origen, b.TipoEvento, u.Id AS IdUsuario, u.Nombre, u.Apellido, u.Email, u.Contrasena, u.UserName 
                               FROM Bitacora b
-                              JOIN Usuario u ON b.UsuarioId = u.Id";
+                              LEFT JOIN Usuario u ON b.IdUsuario = u.Id";
 
                 var resultado = _connection.EjecutarDataTable<BitacoraQuerySql>(query, new Dictionary<string, object>());
 
@@ -71,7 +71,7 @@ namespace IngSoft.Repository
                     TipoEvento = (TipoEvento)b.TipoEvento,
                     Usuario = new Usuario
                     {
-                        Id = b.UsuarioId,
+                        IdBitacora = b.UsuarioId,
                         Nombre = b.Nombre,
                         Apellido = b.Apellido,
                         Email = b.Email,
@@ -84,7 +84,7 @@ namespace IngSoft.Repository
 
                 return bitacoras;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -103,9 +103,9 @@ namespace IngSoft.Repository
                     { "@Filtro", filtro }
                 };
 
-                var query = @"SELECT b.Id, b.Descripcion, b.Fecha, b.Origen, b.TipoEvento, u.Id AS UsuarioId, u.Nombre, u.Apellido, u.Email, u.Contrasena, u.UserName 
+                var query = @"SELECT b.Id, b.Descripcion, b.Fecha, b.Origen, b.TipoEvento, u.Id AS IdUsuario, u.Nombre, u.Apellido, u.Email, u.Contrasena, u.UserName 
                               FROM Bitacora b
-                              JOIN Usuario u ON b.UsuarioId = u.Id
+                              JOIN Usuario u ON b.IdUsuario = u.Id
                               WHERE b.Descripcion LIKE '%' + @Filtro + '%' 
                                  OR b.Origen LIKE '%' + @Filtro + '%' 
                                  OR u.UserName LIKE '%' + @Filtro + '%'";
@@ -121,7 +121,7 @@ namespace IngSoft.Repository
                     TipoEvento = (TipoEvento)b.TipoEvento,
                     Usuario = new Usuario
                     {
-                        Id = b.UsuarioId,
+                        IdBitacora = b.UsuarioId,
                         Nombre = b.Nombre,
                         Apellido = b.Apellido,
                         Email = b.Email,

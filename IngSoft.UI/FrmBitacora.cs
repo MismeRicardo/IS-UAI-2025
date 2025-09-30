@@ -25,6 +25,55 @@ namespace IngSoft.UI
             CargarBitacora();
         }
 
+        private void btnAddMessage_Click(object sender, EventArgs e)
+        {
+            var bitacora = new Bitacora {
+                Id = Guid.NewGuid(),
+                Usuario = new Usuario { IdUsuario = 1},
+                Fecha = DateTime.Now,
+                Descripcion = "Bitacora creada del tipo Message",
+                Origen = "FrmBitacora",
+                TipoEvento = TipoEvento.Message
+            };
+
+            _bitacoraServices.GuardarBitacora(bitacora);
+            CargarBitacora();
+        }
+
+        private void btnAddWarning_Click(object sender, EventArgs e)
+        {
+
+            var bitacora = new Bitacora
+            {
+                Id = Guid.NewGuid(),
+                Usuario = new Usuario { IdUsuario = 2 },
+                Fecha = DateTime.Now,
+                Descripcion = "Bitacora creada del tipo Warning",
+                Origen = "FrmBitacora",
+                TipoEvento = TipoEvento.Warning
+            };
+
+            _bitacoraServices.GuardarBitacora(bitacora);
+            CargarBitacora();
+        }
+
+        private void btnError_Click(object sender, EventArgs e)
+        {
+
+            var bitacora = new Bitacora
+            {
+                Id = Guid.NewGuid(),
+                Usuario = new Usuario { IdUsuario = 1 },
+                Fecha = DateTime.Now,
+                Descripcion = "Bitacora creada del tipo Error",
+                Origen = "FrmBitacora",
+                TipoEvento = TipoEvento.Error
+            };
+
+            _bitacoraServices.GuardarBitacora(bitacora);
+            CargarBitacora();
+        }
+
         private void txtBusquedaBitacora_TextChanged(object sender, EventArgs e)
         {
             var filtro = txtBusquedaBitacora.Text.Trim();

@@ -1,4 +1,5 @@
-﻿using IngSoft.Repository.Factory;
+﻿using IngSoft.Repository;
+using IngSoft.Repository.Factory;
 
 namespace IngSoft.ApplicationServices.Factory
 {
@@ -8,6 +9,11 @@ namespace IngSoft.ApplicationServices.Factory
         {
             var bitacoraRepository = FactoryRepository.CreateBitacoraRepository();
             return new BitacoraServices(bitacoraRepository);
+        }
+        public static IUsuarioServices CreateUsuarioServices()
+        {
+            IUsuarioRepository usuarioRepository = FactoryRepository.CreateUsuarioRepository();
+            return new UsuarioServices(usuarioRepository);
         }
     }
 }

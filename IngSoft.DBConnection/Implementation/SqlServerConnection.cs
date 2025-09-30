@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using IngSoft.DBConnection.Models;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
@@ -63,11 +65,44 @@ namespace IngSoft.DBConnection
                 {
                     string columnName = resultDataReader.GetName(i);
                     object columnValue = resultDataReader[i];
-
-                    PropertyInfo pi = resultObject.GetType().GetProperty(columnName);
-                    if (pi != null)
+                    PropertyInfo pi = null;
+                    if (!(resultObject is DBNull))
                     {
-                        pi.SetValue(resultObject, columnValue);
+                        pi = resultObject.GetType().GetProperty(columnName);
+                    }
+                    if (pi != null && !(columnValue is DBNull))
+                    {
+                        if(pi.PropertyType.Name == "Guid")
+                        {
+                            try
+                            {
+                                Guid guid;
+                                if(Guid.TryParse(columnValue.ToString(), out guid))
+                                {
+                                    pi.SetValue(resultObject, guid);
+                                }
+                                else
+                                {
+                                    byte[] bytes = new byte[16];
+                                    BitConverter.GetBytes((int)columnValue).CopyTo(bytes, 0);
+                                    pi.SetValue(resultObject, new Guid(bytes));
+                                    //if ((typeof(UsuarioQuerySql)).IsSubclassOf(resultObject.GetType()))
+                                    if(resultObject.GetType().Equals(typeof(UsuarioQuerySql)))
+                                    {
+                                        pi = resultObject.GetType().GetProperty("IdUsuario");
+                                        pi.SetValue(resultObject, columnValue);
+                                    }
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                throw;
+                            }
+                        }
+                        else
+                        {
+                            pi.SetValue(resultObject, columnValue);
+                        }
                     }
                 }
 
@@ -90,11 +125,21 @@ namespace IngSoft.DBConnection
             {
                 oneCommand.Parameters.AddWithValue(p.Key, p.Value);
             }
-
             oneCommand.CommandType = CommandType.Text;
             return oneCommand.ExecuteScalar();
         }
-
+        public int ObtenerUltimoId(string tabla, string columnaId)
+        {
+            string query = $"SELECT MAX({columnaId}) FROM {tabla}";
+            int id = 0;
+            var parametros = new Dictionary<string, object> { };
+            var ob=EjecutarEscalar(query, parametros);
+            if (ob != DBNull.Value && ob != null)
+            {
+                id = (int)(ob);
+            }
+            return id;
+        }
         public void EjecutarSinResultado(string query, Dictionary<string, object> parametros)
         {
             SqlCommand oneCommand = new SqlCommand();

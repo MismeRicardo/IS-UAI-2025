@@ -8,7 +8,7 @@ namespace IngSoft.ApplicationServices
     public class BitacoraServices: IBitacoraServices
     {
         private readonly IBitacoraRepository _bitacoraRepository;
-        public BitacoraServices(IBitacoraRepository bitacoraRepository)
+        internal BitacoraServices(IBitacoraRepository bitacoraRepository)
         {
             _bitacoraRepository = bitacoraRepository ?? FactoryRepository.CreateBitacoraRepository();
         }
