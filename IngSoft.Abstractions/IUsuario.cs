@@ -9,6 +9,8 @@ namespace IngSoft.Abstractions
         int IdUsuario { get; set; }
         string UserName {  get; set; }
         string Contrasena {  get; set; }
+        string Nombre {  get; set; }
+        string Apellido {  get; set; }
     }
 
     public interface ICompositable

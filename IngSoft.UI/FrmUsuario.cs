@@ -70,15 +70,15 @@ namespace IngSoft.UI
             ToolStripItem verTodosToolStripButton = botonera["verTodosToolStripMenuItem"];
             if (SessionManager.GetInstance().IsLoggedIn())
             {
-                loginToolStripButton.Visible = false;
-                logoutToolStripButton.Visible = true;
+                //loginToolStripButton.Visible = false;
+                //logoutToolStripButton.Visible = true;
                 agregarUsuarioToolStripButton.Visible = true;
                 verTodosToolStripButton.Visible = true;
             }
             else
             {
-                loginToolStripButton.Visible = true;
-                logoutToolStripButton.Visible = false;
+                //loginToolStripButton.Visible = true;
+                //logoutToolStripButton.Visible = false;
                 agregarUsuarioToolStripButton.Visible = false;
                 verTodosToolStripButton.Visible = false;
             }
@@ -109,6 +109,11 @@ namespace IngSoft.UI
         private void FrmUsuario_Shown(object sender, EventArgs e)
         {
             EliminarControlesAdicionalesUsuario();
+        }
+
+        private void FrmUsuario_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
