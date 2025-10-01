@@ -62,5 +62,10 @@ namespace IngSoft.UI
             };
             bitacoraServices.GuardarBitacora(bitacora);
         }
+
+        private void FrmLogin_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
