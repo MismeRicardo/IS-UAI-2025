@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Encriptador\IEncriptador.cs" />
+    <Compile Include="Encriptador\IEncriptadorHash.cs" />
+    <Compile Include="Encriptador\IEncriptadorKey.cs" />
     <Compile Include="IUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

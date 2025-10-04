@@ -46,16 +46,45 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="DTOs\BitacoraGridDto.cs" />
+    <Compile Include="FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="FrmLogin.Designer.cs">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPrincipal.Designer.cs">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmBitacora.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBitacora.Designer.cs">
+      <DependentUpon>FrmBitacora.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmUsuario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmUsuario.Designer.cs">
+      <DependentUpon>FrmUsuario.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmUsuarioFlexiblizador.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="FrmLogin.resx">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPrincipal.resx">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBitacora.resx">
+      <DependentUpon>FrmBitacora.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmUsuario.resx">
+      <DependentUpon>FrmUsuario.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -80,6 +109,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IngSoft.Abstractions\IngSoft.Abstractions.csproj">
+      <Project>{f5884fd3-5665-45ae-8228-33c20c81ece5}</Project>
+      <Name>IngSoft.Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IngSoft.ApplicationServices\IngSoft.ApplicationServices.csproj">
       <Project>{a5bf4364-1cab-4940-a13f-ce68e2601a68}</Project>
       <Name>IngSoft.ApplicationServices</Name>

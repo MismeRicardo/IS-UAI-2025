@@ -41,10 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UsuarioServices.cs" />
+    <Compile Include="Factory\ServicesFactory.cs" />
+    <Compile Include="IBitacoraServices.cs" />
+    <Compile Include="Implementation\BitacoraServices.cs" />
+    <Compile Include="Implementation\UsuarioServices.cs" />
+    <Compile Include="IUsuarioServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IngSoft.Abstractions\IngSoft.Abstractions.csproj">
+      <Project>{f5884fd3-5665-45ae-8228-33c20c81ece5}</Project>
+      <Name>IngSoft.Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IngSoft.Domain\IngSoft.Domain.csproj">
       <Project>{cdaac3d8-6977-4712-b892-ef025b7c264d}</Project>
       <Name>IngSoft.Domain</Name>
