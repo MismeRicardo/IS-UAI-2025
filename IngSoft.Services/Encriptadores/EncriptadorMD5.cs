@@ -1,13 +1,14 @@
-﻿using System;
+﻿using IngSoft.Abstractions;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace IngSoft.Services.Encriptadores
 {
-    public static class EncriptadorMD5
+    public  class EncriptadorMD5 : IEncriptadorHash
     {
         //TODO: Preguntar a los profes si deberiamos utilizar otro tipo de encriptacion por ejemplo SHA256 o Bcrypt.
-        public static string Encriptar(string textoPlano)
+        public string Encriptar(string textoPlano)
         {
             var md5Hash = MD5.Create();
             byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(textoPlano));
@@ -19,7 +20,7 @@ namespace IngSoft.Services.Encriptadores
             }
             return sBuilder.ToString();
         }
-        public static bool VerificarHash(string textoPlano, string hashGenerado)
+        public bool VerificarHash(string textoPlano, string hashGenerado)
         {
             string hashOfInput = Encriptar(textoPlano);
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
