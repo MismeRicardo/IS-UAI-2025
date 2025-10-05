@@ -41,9 +41,14 @@ namespace IngSoft.UI
         }
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            LogOutUser();
+            ActualizarMenuSegunEstadoSesion();
+        }
+
+        private void LogOutUser()
+        {
             _usuarioServices.SetRegistradoBitacora(FrmUsuarioFlexiblizador.RegistrarEnBitacora);
             _usuarioServices.LogOutUser();
-            ActualizarMenuSegunEstadoSesion();
         }
 
         private void ActualizarMenuSegunEstadoSesion()
@@ -65,6 +70,11 @@ namespace IngSoft.UI
                 bitacoraToolStripMenuItem.Visible = false;
                 label1.Visible = false;
             }
-        }        
+        }
+
+        private void FrmPrincipal_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            LogOutUser();
+        }
     }
 }
