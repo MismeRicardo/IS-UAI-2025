@@ -37,9 +37,9 @@ namespace IngSoft.UI
                 //new FrmUsuario().EliminarControlesAdicionalesUsuario();
                 this.Close();
             }
-            catch (UnauthorizedAccessException UnAcExc)
+            catch (UnauthorizedAccessException)
             {
-                MessageBox.Show($"Error de autenticación: {UnAcExc.Message}");
+                MessageBox.Show($"Credenciales Incorrectas");
                 this.DialogResult = DialogResult.None;
             }
             catch (Exception ex)

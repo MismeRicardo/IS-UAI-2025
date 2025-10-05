@@ -74,7 +74,10 @@ namespace IngSoft.UI
 
         private void FrmPrincipal_FormClosing(object sender, FormClosingEventArgs e)
         {
-            LogOutUser();
+            if (SessionManager.GetInstance().IsLoggedIn())
+            {
+                LogOutUser();
+            }
         }
     }
 }
