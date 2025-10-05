@@ -183,7 +183,7 @@ namespace IngSoft.UI
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("Id", typeof(Guid));
             dataTable.Columns.Add("Username", typeof(string));
-            dataTable.Columns.Add("Contrasena", typeof(string));
+            //dataTable.Columns.Add("Contrasena", typeof(string));
             dataTable.Columns.Add("Email", typeof(string));
             dataTable.Columns.Add("Nombre", typeof(string));
             dataTable.Columns.Add("Apellido", typeof(string));
@@ -191,7 +191,7 @@ namespace IngSoft.UI
             dataTable.Columns.Add("CantidadIntentos", typeof(int));
             foreach (var usuario in pUsuarios)
             {
-                dataTable.Rows.Add(usuario.Id, usuario.Username, usuario.Contrasena, usuario.Email, usuario.Nombre, usuario.Apellido, usuario.Bloqueado, usuario.CantidadIntentos);
+                dataTable.Rows.Add(usuario.Id, usuario.Username, usuario.Email, usuario.Nombre, usuario.Apellido, usuario.Bloqueado, usuario.CantidadIntentos);
             }
 
             dataGridViewUsuarios.DataSource = dataTable;

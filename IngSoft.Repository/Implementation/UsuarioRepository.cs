@@ -137,11 +137,11 @@ namespace IngSoft.Repository
             {
                 query = "UPDATE Usuario SET Bloqueado = 1 WHERE Username = @Username";
                 _connection.EjecutarSinResultado(query, parametros);
+                query = "UPDATE Usuario SET CantidadIntentos = CantidadIntentos + 1 WHERE Username = @Username";
+                _connection.EjecutarSinResultado(query, parametros);
             }
             else
             {
-                query = "UPDATE Usuario SET Bloqueado = 1 WHERE Username = @Username";
-                _connection.EjecutarSinResultado(query, parametros);
                 query = "UPDATE Usuario SET CantidadIntentos = CantidadIntentos + 1 WHERE Username = @Username";
                 _connection.EjecutarSinResultado(query, parametros);
             }
