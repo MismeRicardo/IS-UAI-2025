@@ -1,11 +1,10 @@
-﻿using IngSoft.Abstractions;
-using IngSoft.Domain;
-using IngSoft.Repository;
-using IngSoft.Services;
-using IngSoft.Repository.Factory;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using IngSoft.Domain;
 using IngSoft.Domain.Enums;
+using IngSoft.Repository;
+using IngSoft.Repository.Factory;
+using IngSoft.Services;
 
 namespace IngSoft.ApplicationServices
 {
@@ -21,7 +20,7 @@ namespace IngSoft.ApplicationServices
 
         public void SetRegistradoBitacora(Action<Usuario, string, string, TipoEvento> registrarEnBitacora)
         {
-            _registrarEnBitacora = registrarEnBitacora; //?? LogOnBitacora;
+            _registrarEnBitacora = registrarEnBitacora;
         }
 
         public void GuardarUsuario(Usuario usuario)
@@ -117,22 +116,6 @@ namespace IngSoft.ApplicationServices
                 throw;
             }
         }
-
-        //private void LogOnBitacora(Usuario usuario, string descripcion, string origen,TipoEvento tipoEvento)
-        //{
-        //    IBitacoraServices _bitacoraServices;
-        //    _bitacoraServices = ServicesFactory.CreateBitacoraServices();
-        //    var bitacora = new Bitacora
-        //    {
-        //        Id = Guid.NewGuid(),
-        //        Usuario = usuario,
-        //        Fecha = DateTime.Now,
-        //        Descripcion = descripcion,
-        //        Origen = origen,
-        //        TipoEvento = tipoEvento
-        //    };
-        //    _bitacoraServices.GuardarBitacora(bitacora);
-        //}
     }
 }
 

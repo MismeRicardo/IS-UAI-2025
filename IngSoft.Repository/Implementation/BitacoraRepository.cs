@@ -24,7 +24,6 @@ namespace IngSoft.Repository
 
             try
             {
-                _connection.IniciarTransaccion();
 
                 var parametros = new Dictionary<string, object>
                 {
@@ -36,17 +35,17 @@ namespace IngSoft.Repository
                     {"@TipoEvento", bitacora.TipoEvento }
                 };
 
-                _connection.EjecutarSinResultado("INSERT INTO Bitacora (Id, IdUsuario, Fecha, Descripcion, Origen, TipoEvento) VALUES (@Id, @IdUsuario, @Fecha, @Descripcion, @Origen, @TipoEvento)", parametros);
+                _connection.EjecutarSinResultado("GuardarBitacora", parametros);
 
             }
             catch (Exception)
             {
-                _connection.CancelarTransaccion();
                 throw;
             }
-
-            _connection.AceptarTransaccion();
-            _connection.FinalizarConexion();
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
         }
         public List<Bitacora> ObtenerBitacoras()
         {
@@ -56,11 +55,7 @@ namespace IngSoft.Repository
 
                 _connection.NuevaConexion(connectionString);
 
-                var query = @"SELECT b.Id, b.Descripcion, b.Fecha, b.Origen, b.TipoEvento, u.Id AS IdUsuario, u.Nombre, u.Apellido, u.Email, u.Contrasena, u.UserName 
-                              FROM Bitacora b
-                              LEFT JOIN Usuario u ON b.IdUsuario = u.Id";
-
-                var resultado = _connection.EjecutarDataTable<BitacoraQuerySql>(query, new Dictionary<string, object>());
+                var resultado = _connection.EjecutarDataSet<BitacoraQuerySql>("ObtenerBitacoras", new Dictionary<string, object>());
 
                 var bitacoras = resultado.Select( b => new Bitacora
                 {
@@ -103,14 +98,7 @@ namespace IngSoft.Repository
                     { "@Filtro", filtro }
                 };
 
-                var query = @"SELECT b.Id, b.Descripcion, b.Fecha, b.Origen, b.TipoEvento, u.Id AS IdUsuario, u.Nombre, u.Apellido, u.Email, u.Contrasena, u.UserName 
-                              FROM Bitacora b
-                              JOIN Usuario u ON b.IdUsuario = u.Id
-                              WHERE b.Descripcion LIKE '%' + @Filtro + '%' 
-                                 OR b.Origen LIKE '%' + @Filtro + '%' 
-                                 OR u.UserName LIKE '%' + @Filtro + '%'";
-
-                var resultado = _connection.EjecutarDataTable<BitacoraQuerySql>(query, parametros);
+                var resultado = _connection.EjecutarDataSet<BitacoraQuerySql>("ObtenerBitacoraFiltradas", parametros);
 
                 var bitacoras = resultado.Select(b => new Bitacora
                 {

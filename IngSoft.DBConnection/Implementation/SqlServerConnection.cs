@@ -37,6 +37,41 @@ namespace IngSoft.DBConnection
         {
             _oneTransaction.Rollback();
         }
+        public List<T> EjecutarDataSet<T>(string storeProcedure, Dictionary<string, object> parametros) where T : new()
+        {
+            var finalResult = new List<T>();
+
+            using (var oneCommand = new SqlCommand(storeProcedure, _sqlConnection))
+            {
+                oneCommand.CommandType = CommandType.StoredProcedure;
+
+                if (parametros != null)
+                {
+                    foreach (var p in parametros)
+                    {
+                        oneCommand.Parameters.AddWithValue(p.Key, p.Value ?? DBNull.Value);
+                    }
+                }
+
+                using (var adapter = new SqlDataAdapter(oneCommand))
+                {
+                    var ds = new DataSet();
+                    adapter.Fill(ds);
+
+                    if (ds.Tables.Count == 0) return finalResult;
+
+                    var table = ds.Tables[0];
+                    foreach (DataRow row in table.Rows)
+                    {
+                        var inst = new T();
+                        MapDataRowToInstance(row, inst);
+                        finalResult.Add(inst);
+                    }
+                }
+            }
+
+            return finalResult;
+        }
 
         public List<T> EjecutarDataTable<T>(string query, Dictionary<string, object> parametros) where T : new()
         {
@@ -140,20 +175,107 @@ namespace IngSoft.DBConnection
             }
             return id;
         }
-        public void EjecutarSinResultado(string query, Dictionary<string, object> parametros)
+        public void EjecutarSinResultado(string storeProcedure, Dictionary<string, object> parametros)
         {
-            SqlCommand oneCommand = new SqlCommand();
-            oneCommand.Connection = _sqlConnection;
-            oneCommand.Transaction = _oneTransaction;
-            oneCommand.CommandText = query;
-
-            foreach (var p in parametros)
+            using (var oneCommand = new SqlCommand(storeProcedure, _sqlConnection))
             {
-                oneCommand.Parameters.AddWithValue(p.Key, p.Value);
+                oneCommand.CommandType = CommandType.StoredProcedure;
+
+                if (_oneTransaction != null)
+                {
+                    oneCommand.Transaction = _oneTransaction;
+                }
+
+                foreach (var p in parametros)
+                {
+                    oneCommand.Parameters.AddWithValue(p.Key, p.Value ?? DBNull.Value);
+                }
+
+                oneCommand.ExecuteNonQuery();
+            }
+        }
+
+        private void MapDataRowToInstance<T>(DataRow row, T instance)
+        {
+            var t = typeof(T);
+            foreach (DataColumn col in row.Table.Columns)
+            {
+                object value = row[col];
+                if (value == null || value == DBNull.Value) continue;
+
+                var pi = t.GetProperty(col.ColumnName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                if (pi == null || !pi.CanWrite) continue;
+
+                try
+                {
+                    object converted = ConvertValue(value, pi.PropertyType, instance, pi);
+                    if (converted != null)
+                    {
+                        pi.SetValue(instance, converted);
+                    }
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        private object ConvertValue(object value, Type targetType, object instance, PropertyInfo pi)
+        {
+            var underlying = Nullable.GetUnderlyingType(targetType) ?? targetType;
+
+            if (underlying == typeof(Guid))
+                return ConvertToGuid(value, instance);
+
+            if (underlying.IsEnum)
+            {
+                if (value is string)
+                    return Enum.Parse(underlying, value.ToString(), true);
+                return Enum.ToObject(underlying, value);
             }
 
-            oneCommand.CommandType = CommandType.Text;
-            oneCommand.ExecuteNonQuery();
+            if (underlying == typeof(string))
+                return value.ToString();
+
+            if (underlying.IsAssignableFrom(value.GetType()))
+                return value;
+
+            return Convert.ChangeType(value, underlying);
+        }
+
+        private object ConvertToGuid(object value, object instance)
+        {
+            if (value is Guid g) return g;
+
+            if (value is string s)
+            {
+                Guid parsed;
+                if (Guid.TryParse(s, out parsed)) return parsed;
+            }
+
+            if (value is byte[] bytes && bytes.Length == 16)
+                return new Guid(bytes);
+
+            if (value is int intVal)
+            {
+                var buffer = new byte[16];
+                BitConverter.GetBytes(intVal).CopyTo(buffer, 0);
+                var guidGen = new Guid(buffer);
+
+                if (instance.GetType().Equals(typeof(UsuarioQuerySql)))
+                {
+                    var idUsuarioPi = instance.GetType().GetProperty("IdUsuario", BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                    if (idUsuarioPi != null && idUsuarioPi.CanWrite)
+                        idUsuarioPi.SetValue(instance, intVal);
+                }
+                return guidGen;
+            }
+
+            Guid fallback;
+            if (Guid.TryParse(value.ToString(), out fallback))
+                return fallback;
+
+            return null;
         }
     }
 }
