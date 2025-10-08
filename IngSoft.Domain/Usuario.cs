@@ -11,8 +11,7 @@ namespace IngSoft.Domain
         public string Apellido { get; set; }
         public string Email { get; set; }
         public string Contrasena { get; set; }
-        public string UserName { get => Username; set => Username = value; }
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public bool Bloqueado { get; set; }
         public int CantidadIntentos { get; set; }
     }

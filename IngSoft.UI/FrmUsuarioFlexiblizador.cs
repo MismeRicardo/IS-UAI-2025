@@ -81,7 +81,7 @@ namespace IngSoft.UI
                 usuarioServices.GuardarUsuario(new Usuario
                 {
                     IdUsuario = 0,
-                    Username = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                    UserName = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
                     Nombre = FrmUsuario.ActiveForm.Controls.Find("txtNombre", true).FirstOrDefault() is TextBox txtNombre ? txtNombre.Text : string.Empty,
                     Apellido = FrmUsuario.ActiveForm.Controls.Find("txtApellido", true).FirstOrDefault() is TextBox txtApellido ? txtApellido.Text : string.Empty,
                     Email = FrmUsuario.ActiveForm.Controls.Find("txtEmail", true).FirstOrDefault() is TextBox txtEmail ? txtEmail.Text : string.Empty,
@@ -104,7 +104,7 @@ namespace IngSoft.UI
 
             Usuario mUsuarioActual = new Usuario
             {
-                Username = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                UserName = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
                 Contrasena = FrmUsuario.ActiveForm.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty
             };
             try
@@ -182,7 +182,7 @@ namespace IngSoft.UI
             //transformar la lista de usuarios en un DataTable
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("Id", typeof(Guid));
-            dataTable.Columns.Add("Username", typeof(string));
+            dataTable.Columns.Add("UserName", typeof(string));
             dataTable.Columns.Add("Contrasena", typeof(string));
             dataTable.Columns.Add("Email", typeof(string));
             dataTable.Columns.Add("Nombre", typeof(string));
@@ -191,7 +191,7 @@ namespace IngSoft.UI
             dataTable.Columns.Add("CantidadIntentos", typeof(int));
             foreach (var usuario in pUsuarios)
             {
-                dataTable.Rows.Add(usuario.Id, usuario.Username, usuario.Contrasena, usuario.Email, usuario.Nombre, usuario.Apellido, usuario.Bloqueado, usuario.CantidadIntentos);
+                dataTable.Rows.Add(usuario.Id, usuario.UserName, usuario.Contrasena, usuario.Email, usuario.Nombre, usuario.Apellido, usuario.Bloqueado, usuario.CantidadIntentos);
             }
 
             dataGridViewUsuarios.DataSource = dataTable;

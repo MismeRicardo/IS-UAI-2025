@@ -13,5 +13,6 @@ namespace IngSoft.DBConnection
         object EjecutarEscalar(string query, Dictionary<string, object> parametros);
         int ObtenerUltimoId(string tabla, string columnaId);
         List<T> EjecutarDataTable<T>(string query, Dictionary<string, object> parametros) where T : new();
+        List<T> EjecutarDataSet<T>(string storeProcedure, Dictionary<string, object> parametros) where T : new();
     }
 }
