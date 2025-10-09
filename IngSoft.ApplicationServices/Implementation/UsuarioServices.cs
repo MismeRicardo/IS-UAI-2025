@@ -76,7 +76,7 @@ namespace IngSoft.ApplicationServices
                 Usuario mUsuario = _usuarioRepository.ObtenerUsuario(usuario);
                 if (!(SessionManager.GetUsuario() is null))
                 {
-                    _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Buscado Usuario "+usuario.Username, "ObtenerUsuario", TipoEvento.Message);
+                    _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Buscado Usuario "+usuario.UserName, "ObtenerUsuario", TipoEvento.Message);
                 }
                 return mUsuario;
             }

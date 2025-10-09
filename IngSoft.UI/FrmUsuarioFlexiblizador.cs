@@ -191,7 +191,7 @@ namespace IngSoft.UI
             dataTable.Columns.Add("CantidadIntentos", typeof(int));
             foreach (var usuario in pUsuarios)
             {
-                dataTable.Rows.Add(usuario.Id, usuario.Username, usuario.Email, usuario.Nombre, usuario.Apellido, usuario.Bloqueado, usuario.CantidadIntentos);
+                dataTable.Rows.Add(usuario.Id, usuario.UserName, usuario.Email, usuario.Nombre, usuario.Apellido, usuario.Bloqueado, usuario.CantidadIntentos);
             }
 
             dataGridViewUsuarios.DataSource = dataTable;
