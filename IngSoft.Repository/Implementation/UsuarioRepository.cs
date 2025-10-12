@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using IngSoft.DBConnection;
 using IngSoft.DBConnection.Factory;
 using IngSoft.DBConnection.Models;
@@ -102,7 +103,7 @@ namespace IngSoft.Repository
                 }
                 else
                 {
-                    throw new UnauthorizedAccessException("Usuario no encontrado.");
+                    throw new ArgumentException("Usuario no Encontrado");
                 }
             }
             return usuario;
@@ -142,6 +143,7 @@ namespace IngSoft.Repository
 
             if (cantIntentos >= 2)
             {
+                _connection.EjecutarSinResultado("AumentarIntentosUsuario", parametros);
                 _connection.EjecutarSinResultado("BloquearUsuario", parametros);
             }
             else

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Authentication;
 using System.Windows.Forms;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
@@ -10,13 +11,11 @@ namespace IngSoft.UI
 {
     public partial class FrmLogin : Form
     {
-        private readonly IUsuarioServices usuarioServices;
-        private readonly IBitacoraServices bitacoraServices;
+        private readonly IUsuarioServices usuarioServices = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
+        private readonly IBitacoraServices bitacoraServices = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
         public FrmLogin()
         {
             InitializeComponent();
-            usuarioServices = ServicesFactory.CreateUsuarioServices();
-            bitacoraServices = ServicesFactory.CreateBitacoraServices();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -37,9 +36,14 @@ namespace IngSoft.UI
                 //new FrmUsuario().EliminarControlesAdicionalesUsuario();
                 this.Close();
             }
-            catch (UnauthorizedAccessException)
+            catch(InvalidCredentialException)
             {
                 MessageBox.Show($"Credenciales Incorrectas");
+                this.DialogResult = DialogResult.None;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show($"Su cuenta está bloqueada");
                 this.DialogResult = DialogResult.None;
             }
             catch (Exception ex)
@@ -61,11 +65,6 @@ namespace IngSoft.UI
                 TipoEvento = tipoEvento
             };
             bitacoraServices.GuardarBitacora(bitacora);
-        }
-
-        private void FrmLogin_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

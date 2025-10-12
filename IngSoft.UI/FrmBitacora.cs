@@ -7,17 +7,17 @@ using IngSoft.ApplicationServices.Factory;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
 using IngSoft.UI.DTOs;
+using IngSoft.Services;
 
 namespace IngSoft.UI
 {
     public partial class FrmBitacora : Form
     {
-        private readonly IBitacoraServices _bitacoraServices;
+        private readonly IBitacoraServices _bitacoraServices = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
         private List<Bitacora> _bitacoras;
         public FrmBitacora()
         {
             InitializeComponent();
-            _bitacoraServices = ServicesFactory.CreateBitacoraServices();
         }
 
         private void FrmBitacora_Load(object sender, EventArgs e)

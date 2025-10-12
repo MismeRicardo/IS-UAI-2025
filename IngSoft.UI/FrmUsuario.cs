@@ -19,12 +19,11 @@ namespace IngSoft.UI
 {
     public partial class FrmUsuario : Form
     {
-        private readonly IUsuarioServices _usuarioServices;
+        private readonly IUsuarioServices _usuarioServices = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
         private List<Usuario> _usuarios;
         public FrmUsuario()
         {
             InitializeComponent();
-            _usuarioServices = ServicesFactory.CreateUsuarioServices();
         }
 
         private void agregarNuevoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -101,7 +100,6 @@ namespace IngSoft.UI
 
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _usuarioServices.SetRegistradoBitacora(FrmUsuarioFlexiblizador.RegistrarEnBitacora);
             _usuarioServices.LogOutUser();
             EliminarControlesAdicionalesUsuario();
         }
@@ -113,7 +111,6 @@ namespace IngSoft.UI
 
         private void FrmUsuario_Load(object sender, EventArgs e)
         {
-
         }
     }
 }

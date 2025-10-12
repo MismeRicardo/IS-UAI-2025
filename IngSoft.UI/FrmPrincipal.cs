@@ -13,6 +13,8 @@ namespace IngSoft.UI
         {
             InitializeComponent();
             _usuarioServices = ServicesFactory.CreateUsuarioServices();
+            SingleInstancesManager.Instance.AgregarObjeto(_usuarioServices);
+            SingleInstancesManager.Instance.AgregarObjeto(ServicesFactory.CreateBitacoraServices());
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -47,7 +49,6 @@ namespace IngSoft.UI
 
         private void LogOutUser()
         {
-            _usuarioServices.SetRegistradoBitacora(FrmUsuarioFlexiblizador.RegistrarEnBitacora);
             _usuarioServices.LogOutUser();
         }
 

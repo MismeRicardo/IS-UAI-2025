@@ -44,6 +44,7 @@
     <Compile Include="Encriptador\IEncriptador.cs" />
     <Compile Include="Encriptador\IEncriptadorHash.cs" />
     <Compile Include="Encriptador\IEncriptadorKey.cs" />
+    <Compile Include="ICompositable.cs" />
     <Compile Include="IUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -3,6 +3,7 @@ using IngSoft.Services.Encriptadores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,14 +35,13 @@ namespace IngSoft.Services
             {
                 throw new InvalidOperationException("Ya hay un usuario logueado.");
             }
-
             if (usuarioStored is null || usuarioIngresado is null)
             {
                 throw new ArgumentNullException("Credenciales inválidas.");
             }
             if(!VerificarPassword(usuarioIngresado, usuarioStored))
             {
-                throw new UnauthorizedAccessException("Credenciales inválidas.");
+                throw new InvalidCredentialException("Credenciales inválidas.");
             }
             usuarioStored.Contrasena = "";
             SessionManager.usuario = usuarioStored;

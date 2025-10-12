@@ -17,7 +17,7 @@ namespace IngSoft.UI
         // Delegado para registrar en la bitácora
         internal static void RegistrarEnBitacora(Usuario usuario, string descripcion, string origen, TipoEvento tipoEvento)
         {
-            IBitacoraServices bitacoraServices = ServicesFactory.CreateBitacoraServices();
+            IBitacoraServices bitacoraServices = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
             var bitacora = new Bitacora
             {
                 Id = Guid.NewGuid(),
@@ -74,8 +74,6 @@ namespace IngSoft.UI
         {
             // Lógica para manejar el evento de clic del botón Guardar Usuario
             IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
-            // Inyecta el delegado al servicio
-           usuarioServices.SetRegistradoBitacora(RegistrarEnBitacora);
             try
             {
                 usuarioServices.GuardarUsuario(new Usuario

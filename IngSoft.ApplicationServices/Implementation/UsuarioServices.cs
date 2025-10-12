@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
 using IngSoft.Repository;
@@ -11,7 +12,7 @@ namespace IngSoft.ApplicationServices
     public class UsuarioServices: IUsuarioServices
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        private static Action<Usuario, string, string, TipoEvento> _registrarEnBitacora;
+        private Action<Usuario, string, string, TipoEvento> _registrarEnBitacora;
 
         public UsuarioServices(IUsuarioRepository usuarioRepository)
         {
@@ -51,7 +52,8 @@ namespace IngSoft.ApplicationServices
                 _registrarEnBitacora(usuarioStored, "Acceso exitoso", "Login", TipoEvento.Message);
                 _usuarioRepository.ResetearIntentosFallidos(usuario);
             }
-            catch(UnauthorizedAccessException)
+
+            catch (InvalidCredentialException)
             {
                 _registrarEnBitacora(usuarioStored, "Intento de acceso fallido", "Login", TipoEvento.Warning);
                 _usuarioRepository.AumentarIntentosFallidos(usuario);
@@ -80,9 +82,19 @@ namespace IngSoft.ApplicationServices
                 }
                 return mUsuario;
             }
+            catch(ArgumentException)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario ?? usuario, "Usuario no Encontrado", "Login", TipoEvento.Warning);
+                throw new InvalidCredentialException();
+            }
+            catch (InvalidCredentialException e)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario ?? usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Warning);
+                throw;
+            }
             catch(Exception e)
             {
-                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario??usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
                 throw;
             }
         }
