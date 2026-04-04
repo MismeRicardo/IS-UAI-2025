@@ -1,35 +1,60 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
-using IngSoft.ApplicationServices.Dto;
 using IngSoft.ApplicationServices.Factory;
-using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain.Multidioma;
 using IngSoft.Services;
 
-namespace IngSoft.UI
+namespace IngSoft.UI.Multidioma
 {
-    public partial class FrmIntegridadDB : Form, IObserver
+    public partial class FrmCrearIdioma : Form, IObserver
     {
-        private ResultadoIntegridad _integridadDB;
         private readonly IMultidiomaServices _multidiomaServices;
-        private readonly IDigitoVerificadorServices _digitoVerificadorServices;
-        public FrmIntegridadDB(ResultadoIntegridad integridadDB)
+        public FrmCrearIdioma()
         {
             InitializeComponent();
-            _integridadDB = integridadDB;
-
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
-            _digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
         }
 
-        private void FrmIntegridadDB_Load(object sender, EventArgs e)
+        private void btnCrear_Click(object sender, EventArgs e)
         {
-            var errores = _integridadDB.Errores;
-            dgvIntegridad.DataSource = errores;
-            dgvIntegridad.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            if(string.IsNullOrWhiteSpace(txtIdioma.Text))
+            {
+                MessageBox.Show("El nombre del idioma no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if(string.IsNullOrWhiteSpace(txtCodigo.Text))
+            {
+                MessageBox.Show("El código del idioma no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var nuevoIdioma = new Idioma
+            {
+                Id = Guid.NewGuid(),
+                Nombre = txtIdioma.Text.Trim(),
+                Codigo = txtCodigo.Text.Trim()
+            };
+
+            try
+            {
+                _multidiomaServices.CrearIdioma(nuevoIdioma);
+                MessageBox.Show("Idioma creado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txtIdioma.Text = string.Empty;
+                txtCodigo.Text = string.Empty;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Se quiere crear un Idioma que ya existe", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void FrmCrearIdioma_Load(object sender, EventArgs e)
+        {
             SuscribirseAIdiomaActual();
             AplicarIdiomaActual();
         }
@@ -61,6 +86,7 @@ namespace IngSoft.UI
                 }
             }
         }
+
         private void AplicarIdiomaActual()
         {
             // Aplicar el idioma actual al formulario
@@ -70,13 +96,6 @@ namespace IngSoft.UI
                     .Cast<IControlIdioma>().ToList();
                 MultidiomaManager.CambiarIdiomaControles(this, controles);
             }
-        }
-
-        private void btnRecalcular_Click(object sender, EventArgs e)
-        {
-            _digitoVerificadorServices.RecaulcularDigitosVerificadores();
-            MessageBox.Show("Dígitos verificadores recalculados correctamente.");
-            this.Close();
         }
     }
 }

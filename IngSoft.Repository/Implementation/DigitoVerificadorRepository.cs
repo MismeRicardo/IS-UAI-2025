@@ -182,7 +182,7 @@ namespace IngSoft.Repository.Implementation
                     datosTablas[dv.NombreTabla] = ObtenerRegistrosDeTabla(dv.NombreTabla);
                 }
 
-                //_connection.IniciarTransaccion();
+                _connection.IniciarTransaccion();
 
                 foreach (var dv in digitosVerificadores) 
                 {
@@ -314,13 +314,11 @@ namespace IngSoft.Repository.Implementation
 
             var parametros = new Dictionary<string, object>
             {
-                { "@tabla", tabla },
-                {"@valorId", identificador},
-                {"@dvh", dvhNuevo}
+                {"@Id", identificador},
+                {"@Dvh", dvhNuevo}
             };
 
             var storedProcedure = $"ActualizarDVH{tabla}";
-            var storedProcedure = $"ActualizarDVH";
             _connection.EjecutarSinResultado(storedProcedure, parametros);
         }
         private List<DigitoVerificador> ObtenerDigitosVerificadoresSinConexion()
